@@ -1,10 +1,6 @@
 package com.aqua.services;
 
-import com.aqua.dao.CategoryDAO;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-
-import java.util.TreeMap;
 
 
 /**
@@ -12,8 +8,6 @@ import java.util.TreeMap;
  */
 @Service
 public class CategoryService {
-
-    private CategoryDAO categoryDAO;
 
 
 }

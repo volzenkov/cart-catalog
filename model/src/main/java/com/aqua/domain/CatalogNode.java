@@ -22,6 +22,9 @@ public abstract class CatalogNode extends NamedEntity {
     private Category parent;
 
     @Column
+    private String parentNumericPath;
+
+    @Column
     private boolean enabled;
 
     public CatalogNode() {}
@@ -70,6 +73,14 @@ public abstract class CatalogNode extends NamedEntity {
 
     public void setParent(Category parent) {
         this.parent = parent;
+    }
+
+    public String getParentNumericPath() {
+        return parentNumericPath;
+    }
+
+    public void setParentNumericPath(String fullNumericPath) {
+        this.parentNumericPath = fullNumericPath;
     }
 
     public boolean isEnabled() {

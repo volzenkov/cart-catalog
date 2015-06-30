@@ -8,6 +8,7 @@ import com.aqua.dao.exceptions.UpdateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -19,48 +20,35 @@ import java.util.Set;
 /**
  * @author: vzenkov
  */
+@Repository
 @Transactional
-public abstract class GenericDAOImpl<T extends Serializable> implements GenericDAO<T> {
+public class GenericDAOImpl implements GenericDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
-    /**
-     * T class, for which current manager was created
-     */
-    Class<T> clazz = null;
-
-    public Class<T> getClazz() {
-        return clazz;
-    }
-
-    public void setClazz(Class<T> entityClass) {
-        this.clazz = entityClass;
-    }
 
     /**
      * Create new record in DB
      */
-    public T create(T entity) throws CreateException {
-
+    public <T> T create(T entity) throws CreateException {
         try {
-            sessionFactory.getCurrentSession().persist(entity);
-            sessionFactory.getCurrentSession().flush();
+            sessionFactory.getCurrentSession().save(entity);
+//            sessionFactory.getCurrentSession().flush();
         } catch (Exception e) {
             throw new CreateException(e);
         }
 
         return entity;
-
     }
 
     /**
      * Update existent record in DB
      */
-    public T update(T entity) throws UpdateException {
+    public <T> T update(T entity) throws UpdateException {
 
         try {
             entity = (T) sessionFactory.getCurrentSession().merge(entity);
-            sessionFactory.getCurrentSession().flush();
+//            sessionFactory.getCurrentSession().flush();
         } catch (Exception e) {
             throw new UpdateException(e);
         }
@@ -71,11 +59,11 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
     /**
      * Delete existent record from DB
      */
-    public void remove(T entity) throws RemoveException {
+    public <T> void remove(T entity) throws RemoveException {
 
         try {
             sessionFactory.getCurrentSession().delete(sessionFactory.getCurrentSession().merge(entity));
-            sessionFactory.getCurrentSession().flush();
+//            sessionFactory.getCurrentSession().flush();
         } catch (Exception e) {
             throw new RemoveException(e);
         }
@@ -84,13 +72,11 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
     /**
      * Get record from DB by primary key
      */
-    public T findByPrimaryKey(Long id) {
-
+    public <T> T findByPrimaryKey(Class<T> clazz, Long id) {
         return (T) sessionFactory.getCurrentSession().get(clazz, id);
     }
 
-    public T findByPrimaryKey(String id) {
-
+    public<T>  T findByPrimaryKey(Class<T> clazz, String id) {
         return (T) sessionFactory.getCurrentSession().get(clazz, id);
     }
 
@@ -99,7 +85,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
      *
      * @throws FinderException
      */
-    public List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters) throws FinderException {
+    public <T> List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters) throws FinderException {
         try {
             Query query = sessionFactory.getCurrentSession().getNamedQuery(namedQuery);
 
@@ -130,7 +116,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
      * @return List<T>
      * @throws FinderException
      */
-    public List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters, int first, int max) throws FinderException {
+    public <T> List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters, int first, int max) throws FinderException {
         try {
             Query query = sessionFactory.getCurrentSession().getNamedQuery(namedQuery);
 
@@ -154,7 +140,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
      *
      * @throws FinderException
      */
-    public T executeNamedQueryWithOneResult(String namedQuery, Object[] parameters) throws FinderException {
+    public <T> T executeNamedQueryWithOneResult(String namedQuery, Object[] parameters) throws FinderException {
         try {
             Query query = sessionFactory.getCurrentSession().getNamedQuery(namedQuery);
 
@@ -207,7 +193,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
      * @throws RemoveException
      */
 //        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public int removeByIds(String ids) throws RemoveException {
+    public <T> int removeByIds(Class<T> clazz, String ids) throws RemoveException {
 
         try {
             Query query = sessionFactory.getCurrentSession().createQuery("DELETE " + clazz.getSimpleName() + " WHERE id IN (" + ids + ")");
@@ -216,6 +202,11 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
         } catch (Exception e) {
             throw new RemoveException(e);
         }
+    }
+
+    @Override
+    public <T> List<T> findAll(Class<T> clazz) throws FinderException {
+        return this.findAll(clazz, 0, 1000, null, null);
     }
 
     /**
@@ -227,7 +218,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
      * @throws FinderException
      */
 //        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<T> findAll(int first, int max, String orderBy, String orderDirection) throws FinderException {
+    public <T> List<T> findAll(Class<T> clazz, int first, int max, String orderBy, String orderDirection) throws FinderException {
         try {
 
             String sql = "SELECT table FROM " + clazz.getSimpleName() + " table";
@@ -263,7 +254,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
      * @throws FinderException
      */
 //        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<T> getByCriteria(Hashtable<String, String> criteria, int first, int max, String orderBy, String orderDirection) throws FinderException {
+    public <T> List<T> getByCriteria(Class<T> clazz, Hashtable<String, String> criteria, int first, int max, String orderBy, String orderDirection) throws FinderException {
 
         Set<String> set = criteria.keySet();
         String key;
@@ -327,7 +318,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
      * @throws
      */
 //        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public Long count() {
+    public <T> Long count(Class<T> clazz) {
 
         String sql = "SELECT COUNT(table) FROM " + clazz.getSimpleName() + " table";
 
@@ -340,7 +331,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
 
 
 //        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public T SQLQuery(String sql) throws FinderException {
+    public <T> T SQLQuery(String sql) throws FinderException {
 
         try {
             Query query = sessionFactory.getCurrentSession().createQuery(sql);
@@ -355,7 +346,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
     }
 
 //        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<T> SQLNativeQuery(String sql) throws FinderException {
+    public <T> List<T> SQLNativeQuery(String sql) throws FinderException {
 
         try {
             Query query = sessionFactory.getCurrentSession().createQuery(sql);
@@ -368,7 +359,7 @@ public abstract class GenericDAOImpl<T extends Serializable> implements GenericD
     }
 
 //        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<T> SQL(String sql) throws FinderException {
+    public <T> List<T> SQL(String sql) throws FinderException {
         try {
 
 //			String sql = "SELECT table FROM " + clazz.getSimpleName() + " table";

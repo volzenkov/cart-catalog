@@ -11,35 +11,35 @@ import java.util.List;
 /**
  * @author: vzenkov
  */
-public interface GenericDAO<T> {
+public interface GenericDAO {
     
     /**
      * Create new record in DB
      */
-    public T create(T entity) throws CreateException;
+    public <T> T create(T entity) throws CreateException;
 
     /**
      * Update existent record in DB
      */
-    public T update(T entity) throws UpdateException;
+    public <T> T update(T entity) throws UpdateException;
 
     /**
      * Delete existent record from DB
      */
-    public void remove(T entity) throws RemoveException, RemoveException;
+    public <T> void remove(T entity) throws RemoveException, RemoveException;
 
     /**
      * Get record from DB by primary key
      */
-    public T findByPrimaryKey(Long id);
-    public T findByPrimaryKey(String id);
+    public <T> T findByPrimaryKey(Class<T> clazz, Long id);
+    public <T> T findByPrimaryKey(Class<T> clazz, String id);
 
     /**
      * Execute Named Query, which return records from DB, with given parameters.
      *
      * @throws FinderException
      */
-    public List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters) throws FinderException;
+    public <T> List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters) throws FinderException;
 
     /**
      * Execute Named Query, which return records from DB limits by first and max, with given parameters.
@@ -51,14 +51,14 @@ public interface GenericDAO<T> {
      * @return List<T>
      * @throws FinderException
      */
-    public List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters, int first, int max) throws FinderException;
+    public <T> List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters, int first, int max) throws FinderException;
 
     /**
      * Execute Named Query, which return only one record from DB, with given parameters.
      *
      * @throws FinderException
      */
-    public T executeNamedQueryWithOneResult(String namedQuery, Object[] parameters) throws FinderException;
+    public <T> T executeNamedQueryWithOneResult(String namedQuery, Object[] parameters) throws FinderException;
 
     /**
      * Execute Named Query, which doesn't return result from DB, with given parameters.
@@ -75,7 +75,7 @@ public interface GenericDAO<T> {
      * @return number or deleted rows
      * @throws RemoveException
      */
-    public int removeByIds(String ids) throws RemoveException;
+    public <T> int removeByIds(Class<T> clazz, String ids) throws RemoveException;
 
     /**
      * Find all records (limit by fist and max parameters)
@@ -85,7 +85,17 @@ public interface GenericDAO<T> {
      * @return List<T>
      * @throws FinderException
      */
-    public List<T> findAll(int first, int max, String orderBy, String orderDirection) throws FinderException;
+    public <T> List<T> findAll(Class<T> clazz) throws FinderException;
+
+    /**
+     * Find all records (limit by fist and max parameters)
+     *
+     * @param first - the start position of the first result, numbered from 0
+     * @param max   - maximum number of results to retrieve
+     * @return List<T>
+     * @throws FinderException
+     */
+    public <T> List<T> findAll(Class<T> clazz, int first, int max, String orderBy, String orderDirection) throws FinderException;
 
     /**
      * Find all records by list of criteria
@@ -94,7 +104,7 @@ public interface GenericDAO<T> {
      * @return List<T>
      * @throws FinderException
      */
-    public List<T> getByCriteria(Hashtable<String, String> criteria, int first, int max, String orderBy, String orderDirection) throws FinderException;
+    public <T> List<T> getByCriteria(Class<T> clazz, Hashtable<String, String> criteria, int first, int max, String orderBy, String orderDirection) throws FinderException;
 
     /**
      * Count all records
@@ -102,13 +112,13 @@ public interface GenericDAO<T> {
      * @return count of records
      * @throws
      */
-    public Long count();
+    public <T> Long count(Class<T> clazz);
 
 
-    public T SQLQuery(String sql) throws FinderException;
+    public <T> T SQLQuery(String sql) throws FinderException;
 
-    public List<T> SQLNativeQuery(String sql) throws FinderException;
+    public <T> List<T> SQLNativeQuery(String sql) throws FinderException;
 
-    public List<T> SQL(String sql) throws FinderException;
+    public <T> List<T> SQL(String sql) throws FinderException;
 
 }

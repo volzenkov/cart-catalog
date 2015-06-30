@@ -1,6 +1,6 @@
 package com.aqua.dao.impl;
 
-import com.aqua.dao.*;
+import com.aqua.dao.GenericDAO;
 import com.aqua.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,24 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-context.xml")
 public class CatalogNodeDAOImplTest {
 
     @Autowired
-    private CatalogItemDAO catalogItemDAO;
-
-    @Autowired
-    private CategoryDAO categoryDAO;
-
-    @Autowired
-    private AttributeDefDAO attributeDefDAO;
-
-    @Autowired
-    private AttributeValueDAO attributeValueDAO;
-
-    @Autowired
-    private AttributeGroupDAO attributeGroupDAO;
+    private GenericDAO genericDAO;
 
     @Test
     public void testAddCatalogNode() throws Exception {
@@ -36,15 +26,15 @@ public class CatalogNodeDAOImplTest {
         category.getMeta().add("meta2");
         category.getTags().add("tag1");
 
-        categoryDAO.addCategory(category);
+        genericDAO.create(category);
 
         AttributeDef attributeDef1 = new AttributeDef("length", AttributeType.INT);
         AttributeDef attributeDef2 = new AttributeDef("width", AttributeType.INT);
         AttributeDef attributeDef3 = new AttributeDef("height", AttributeType.INT);
 
-        attributeDefDAO.addAttributeDef(attributeDef1);
-        attributeDefDAO.addAttributeDef(attributeDef2);
-        attributeDefDAO.addAttributeDef(attributeDef3);
+        genericDAO.create(attributeDef1);
+        genericDAO.create(attributeDef2);
+        genericDAO.create(attributeDef3);
 
         AttributeGroup attributeGroup = new AttributeGroup("group1");
 
@@ -52,7 +42,7 @@ public class CatalogNodeDAOImplTest {
         attributeGroup.getAttributeDefs().add(attributeDef2);
         attributeGroup.getAttributeDefs().add(attributeDef3);
 
-        attributeGroupDAO.addAttributeGroup(attributeGroup);
+        genericDAO.create(attributeGroup);
 
         CatalogItem item = new CatalogItem("test-item");
         item.setParent(category);
@@ -60,13 +50,11 @@ public class CatalogNodeDAOImplTest {
         item.getAttributeValues().add(new AttributeValue(attributeDef2, item, "2"));
         item.getAttributeValues().add(new AttributeValue(attributeDef3, item, "3"));
 
-        catalogItemDAO.addCatalogItem(item);
+        genericDAO.create(item);
 
 //        attributeValueDAO.addAttributeValue(new AttributeValue(attributeDef1, item, "l"));
 //        attributeValueDAO.addAttributeValue(new AttributeValue(attributeDef2, item, "2"));
 //        attributeValueDAO.addAttributeValue(new AttributeValue(attributeDef3, item, "3"));
-
-        catalogItemDAO.listCatalogItems();
 
     }
 
@@ -74,19 +62,30 @@ public class CatalogNodeDAOImplTest {
     public void testAddCategoryTree() throws Exception {
 
         Category root = new Category("Root");
-        categoryDAO.addCategory(root);
+        genericDAO.create(root);
 
         Category category = new Category("qwe", root);
-        categoryDAO.addCategory(category);
+        genericDAO.create(category);
 
         Category category1 = new Category("asd", category);
-        categoryDAO.addCategory(category1);
+        genericDAO.create(category1);
 
         Category category2 = new Category("zxc", root);
-        categoryDAO.addCategory(category2);
+        genericDAO.create(category2);
 
-        Category testCategory = categoryDAO.findByPrimaryKey(category1.getId());
+        Category testCategory = genericDAO.findByPrimaryKey(Category.class, category1.getId());
         testCategory.setParent(category2);
-        categoryDAO.updateCategory(testCategory);
+        genericDAO.update(testCategory);
     }
+
+    @Test
+    public void testGetCategories() throws Exception {
+        List<CatalogItem> all = genericDAO.findAll(CatalogItem.class);
+        for (CatalogItem catalogItem : all) {
+            System.out.println(catalogItem);
+        }
+
+    }
+
+
 }

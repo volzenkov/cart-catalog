@@ -13,8 +13,6 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Category extends CatalogNode {
 
-    private String fullNumericPath;
-
     public Category() {}
 
     public Category(String name) {
@@ -23,14 +21,6 @@ public class Category extends CatalogNode {
 
     public Category(String name, Category parentCategory) {
         super(name, parentCategory);
-    }
-
-    public String getFullNumericPath() {
-        return fullNumericPath;
-    }
-
-    public void setFullNumericPath(String fullNumericPath) {
-        this.fullNumericPath = fullNumericPath;
     }
 
 }
