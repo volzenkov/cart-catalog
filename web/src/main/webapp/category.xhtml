@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="css/default.css"/>
+
+</h:head>
+
+<h:body styleClass="body">
+    <style type="text/css">
+
+        #form ul {
+            list-style-type: none;
+            padding: 0;
+            margin-left: 0;
+            margin-top: 0;
+        }
+
+    </style>
+    <div class="mainDiv">
+
+        <!--<ui:insert name="header">-->
+            <!--<ui:include src="/header.xhtml"/>-->
+        <!--</ui:insert>-->
+
+        <div class="contentDiv">
+
+            <h:form id="form">
+                <p:treeTable value="#{categoryTreeView.root}" var="category">
+                    <f:facet name="header">
+                        Document Viewer
+                    </f:facet>
+                    <p:column headerText="Name">
+                        <h:outputText value="#{category.name}" />
+                    </p:column>
+                    <p:column headerText="Id">
+                        <h:outputText value="#{category.id}" />
+                    </p:column>
+                    <p:column headerText="Created">
+                        <h:outputText value="#{category.created}" />
+                    </p:column>
+                    <p:column style="width:24px">
+                        <p:commandLink update=":form:documentPanel" oncomplete="PF('documentDialog').show()" title="View Detail" styleClass="ui-icon ui-icon-search">
+                            <f:setPropertyActionListener value="#{category}" target="#{categoryTreeView.selectedCategory}" />
+                        </p:commandLink>
+                    </p:column>
+                </p:treeTable>
+
+                <p:dialog id="dialog" header="Document Detail" showEffect="fade" widgetVar="documentDialog" modal="true" resizable="false">
+                    <p:outputPanel id="documentPanel">
+                        <p:panelGrid  columns="2" columnClasses="label,value" rendered="#{not empty categoryTreeView.selectedCategory}">
+                            <h:outputLabel for="name" value="Name: " />
+                            <h:outputText id="name" value="#{categoryTreeView.selectedCategory.name}" style="font-weight:bold" />
+
+                            <h:outputLabel for="id" value="Size: " />
+                            <h:outputText id="id" value="#{categoryTreeView.selectedCategory.id}" style="font-weight:bold" />
+
+                            <h:outputLabel for="created" value="Type " />
+                            <h:outputText id="created" value="#{categoryTreeView.selectedCategory.created}" style="font-weight:bold" />
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+
+        </div>
+    </div>
+
+</h:body>
+</html>
+
+

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.hbm2ddl.auto">create</property>
+        <!--<property name="hibernate.hbm2ddl.import_files">/import.sql</property>-->
+
+		<mapping class="com.aqua.domain.AttributeDef" />
+		<mapping class="com.aqua.domain.AttributeValue" />
+		<mapping class="com.aqua.domain.AttributeGroup" />
+		<mapping class="com.aqua.domain.CatalogItem" />
+		<mapping class="com.aqua.domain.Category" />
+
+        <event type="save">
+            <listener class="com.aqua.dao.listeners.SaveDateListener"/>
+        </event>
+        <event type="update">
+            <listener class="com.aqua.dao.listeners.UpdateDateListener"/>
+        </event>
+	</session-factory>
+</hibernate-configuration>
