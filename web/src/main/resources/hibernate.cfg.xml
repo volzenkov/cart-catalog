@@ -6,20 +6,19 @@
 <hibernate-configuration>
 	<session-factory>
 		<property name="hibernate.hbm2ddl.auto">create</property>
-        <property name="hibernate.hbm2ddl.import_files">/import.sql</property>
+        <!--<property name="hibernate.hbm2ddl.import_files">/import.sql</property>-->
 
-		<mapping class="khpi.iip.mipk.kharkiv.edu.domain.CatalogItem" />
-		<mapping class="khpi.iip.mipk.kharkiv.edu.domain.Document" />
-		<mapping class="khpi.iip.mipk.kharkiv.edu.domain.Category" />
-		<mapping class="khpi.iip.mipk.kharkiv.edu.domain.Chapter" />
-		<mapping class="khpi.iip.mipk.kharkiv.edu.domain.User" />
-
+		<mapping class="com.aqua.domain.AttributeDef" />
+		<mapping class="com.aqua.domain.AttributeValue" />
+		<mapping class="com.aqua.domain.AttributeGroup" />
+		<mapping class="com.aqua.domain.CatalogItem" />
+		<mapping class="com.aqua.domain.Category" />
 
         <event type="save">
-            <listener class="khpi.iip.mipk.kharkiv.edu.com.aqua.dao.listeners.SaveDateListener"/>
+            <listener class="com.aqua.dao.listeners.SaveDateListener"/>
         </event>
         <event type="update">
-            <listener class="khpi.iip.mipk.kharkiv.edu.com.aqua.dao.listeners.UpdateDateListener"/>
+            <listener class="com.aqua.dao.listeners.UpdateDateListener"/>
         </event>
 	</session-factory>
 </hibernate-configuration>

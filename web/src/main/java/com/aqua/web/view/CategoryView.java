@@ -26,7 +26,7 @@ public class CategoryView implements Serializable {
 
     @PostConstruct
     public void init() {
-        root = categoryController.dummyCategories();
+        root = categoryController.buildTree();
     }
 
     public TreeNode getRoot() {
