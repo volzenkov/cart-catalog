@@ -6,7 +6,7 @@ import java.util.Set;
 public class Tree<T> implements Visitable<T> {
 
     // NB: LinkedHashSet preserves insertion order
-    private final Set<Tree> children = new LinkedHashSet<Tree>();
+    private final Set<Tree<T>> children = new LinkedHashSet<>();
     private final T data;
 
     public Tree(T data) {
@@ -16,24 +16,28 @@ public class Tree<T> implements Visitable<T> {
     public void accept(Visitor<T> visitor) {
         visitor.visitData(this, data);
 
-        for (Tree child : children) {
+        for (Tree<T> child : children) {
             Visitor<T> childVisitor = visitor.visitTree(child);
             child.accept(childVisitor);
         }
     }
 
-    public Tree child(T data) {
-        for (Tree child: children ) {
+    public Tree<T> child(T data) {
+        for (Tree<T> child: children ) {
             if (child.data.equals(data)) {
                 return child;
             }
         }
 
-        return child(new Tree(data));
+        return child(new Tree<>(data));
     }
 
-    public Tree child(Tree<T> child) {
+    public Tree<T> child(Tree<T> child) {
         children.add(child);
         return child;
+    }
+
+    public T getData() {
+        return data;
     }
 }

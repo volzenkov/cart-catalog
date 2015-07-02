@@ -36,11 +36,11 @@
 
         <div class="mainDiv">
 
-            <h:form id="headerMsgForm" prependId="false">
-                <p:growl id="growl" showDetail="false" sticky="true"/>
-            </h:form>
+            <!--<h:form id="headerMsgForm" prependId="false">-->
+                <!--<p:growl id="growl" showDetail="false" sticky="true"/>-->
+            <!--</h:form>-->
 
-            <h:form id="headerLinksForm" prependId="false">
+            <!--<h:form id="headerLinksForm" prependId="false">-->
 
                 <div id="headerDiv">
                     <p:tabView dynamic="true" cache="true">
@@ -49,11 +49,10 @@
                                 <ui:include src="/category.xhtml"/>
                             </ui:insert>
                         </p:tab>
-                        <p:tab title="Godfather Part II">
-                            <h:panelGrid columns="2" cellpadding="10">
-                                <p:graphicImage name="demo/images/godfather/godfather2.jpg"/>
-                                <h:outputText value="Francis Ford Coppola's legendary..."/>
-                            </h:panelGrid>
+                        <p:tab title="AttributeDefs">
+                            <ui:insert name="attributeDef">
+                                <ui:include src="/attributeDef.xhtml"/>
+                            </ui:insert>
                         </p:tab>
                         <p:tab title="Godfather Part III">
                             <h:panelGrid columns="2" cellpadding="10">
@@ -63,7 +62,7 @@
                         </p:tab>
                     </p:tabView>
                 </div>
-            </h:form>
+            <!--</h:form>-->
 
         </div>
     </h:body>

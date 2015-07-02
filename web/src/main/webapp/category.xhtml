@@ -5,9 +5,9 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <h:form id="categoryForm">
+    <h:form id="categoryForm" prependId="false">
         <p:contextMenu for="categoryTree">
-            <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="ui-icon-extlink"/>
+            <p:menuitem value="add" action="#{categoryTreeView.initNewCatalogDialog()}" oncomplete="newCategoryDlg.show()" />
         </p:contextMenu>
 
         <p:treeTable id="categoryTree" value="#{categoryTreeView.root}" var="category" selectionMode="single" selection="#{categoryTreeView.selectedCategory}" dynamic="true">
@@ -21,20 +21,32 @@
                 <h:outputText value="#{category.created}" />
             </p:column>
         </p:treeTable>
+    </h:form>
 
-        <p:dialog id="dialog" header="Document Detail" showEffect="fade" widgetVar="documentDialog" modal="true" resizable="false">
-            <p:outputPanel id="documentPanel">
-                <p:panelGrid  columns="2" columnClasses="label,value" rendered="#{not empty categoryTreeView.selectedCategory}">
-                    <h:outputLabel for="name" value="Name: " />
-                    <h:outputText id="name" value="#{categoryTreeView.selectedCategory.name}" style="font-weight:bold" />
+    <h:form prependId="false">
+        <p:dialog header="New Category" showEffect="fade" widgetVar="newCategoryDlg" modal="true" dynamic="true" closable="false">
+            <p:outputPanel id="newCategoryPanel" autoUpdate="true">
+                <h:panelGrid columns="2" id="newCategoryPanelGrid">
+                    <h:outputLabel for="newCategoryName" value="Name: *"/>
+                    <p:inputText id="newCategoryName" value="#{categoryTreeView.newCategory.name}"  required="true" size="20"
+                                 requiredMessage="Заполните обязательное поле"
+                                 validatorMessage="Недопустимое значение">
+                        <f:validateLength minimum="3" maximum="40"/>
+                        <!--<p:ajax event="blur" listener="#{userController.checkUniqueLogin}"/>-->
+                    </p:inputText>
+                    <h:outputLabel/>
+                    <p:message for="newCategoryName"/>
 
-                    <h:outputLabel for="id" value="Size: " />
-                    <h:outputText id="id" value="#{categoryTreeView.selectedCategory.id}" style="font-weight:bold" />
-
-                    <h:outputLabel for="created" value="Type " />
-                    <h:outputText id="created" value="#{categoryTreeView.selectedCategory.created}" style="font-weight:bold" />
-                </p:panelGrid>
+                </h:panelGrid>
+                <h:panelGroup layout="block" columns="2" style="text-align: center">
+                    <p:commandButton value="Cancel" style="margin: 5px 25px;"
+                                     oncomplete="newCategoryDlg.hide()" immediate="true"/>
+                    <p:commandButton value="Ok" style="margin: 5px 25px;" action="#{categoryTreeView.addCategory()}"
+                                     oncomplete="newCategoryDlg.hide()" update="@([id$=categoryTree])"/>
+                </h:panelGroup>
             </p:outputPanel>
         </p:dialog>
     </h:form>
+
+
 </ui:composition>

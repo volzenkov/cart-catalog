@@ -20,6 +20,10 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    public void addCategory(Category category) {
+        categoryService.save(category);
+    }
+
     public TreeNode dummyCategories() {
 
         TreeNode root = new DefaultTreeNode(new Category("Root"), null);
@@ -38,7 +42,7 @@ public class CategoryController {
     public TreeNode buildTree() {
         Tree<Category> categoryTree = categoryService.buildCategoriesTree();
 
-        DefaultTreeNode root = new DefaultTreeNode(new Category("Root"), null);
+        DefaultTreeNode root = new DefaultTreeNode(categoryTree.getData(), null);
         categoryTree.accept(new PrimeTreeNodeVisitor(root));
 
         return root;
@@ -58,17 +62,7 @@ public class CategoryController {
 
         public void visitData(Tree<Category> parent, Category data) {
             parentNode = new DefaultTreeNode(data, parentNode);
-            System.out.println(data.getName());
         }
-    }
-
-    public static void main(String[] args) {
-        CategoryController categoryController = new CategoryController();
-        categoryController.setCategoryService(new CategoryService());
-
-        TreeNode treeNode = categoryController.buildTree();
-        System.out.println(treeNode);
-
     }
 
     public void setCategoryService(CategoryService categoryService) {
