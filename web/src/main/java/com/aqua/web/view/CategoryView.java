@@ -1,6 +1,5 @@
 package com.aqua.web.view;
 
-import com.aqua.domain.Category;
 import com.aqua.web.controller.CategoryController;
 import org.primefaces.model.TreeNode;
 
@@ -19,7 +18,7 @@ public class CategoryView implements Serializable {
 
     private TreeNode root;
 
-    private Category selectedCategory;
+    private TreeNode selectedCategory;
 
     @ManagedProperty("#{categoryController}")
     private CategoryController categoryController;
@@ -37,11 +36,11 @@ public class CategoryView implements Serializable {
         this.root = root;
     }
 
-    public Category getSelectedCategory() {
+    public TreeNode getSelectedCategory() {
         return selectedCategory;
     }
 
-    public void setSelectedCategory(Category selectedCategory) {
+    public void setSelectedCategory(TreeNode selectedCategory) {
         this.selectedCategory = selectedCategory;
     }
 
