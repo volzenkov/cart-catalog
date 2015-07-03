@@ -3,7 +3,7 @@ package com.aqua.dao.exceptions;
 /**
  * @author: vzenkov
  */
-public class RemoveException extends Exception {
+public class RemoveException extends RuntimeException {
 
     public RemoveException() {
     }

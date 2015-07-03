@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="css/default.css"/>
+
+
+    <script type="text/javascript">
+        function start() {
+            statusDialog.show();
+        }
+
+        function stop() {
+            statusDialog.hide();
+        }
+    </script>
+
+</h:head>
+
+<h:body styleClass="body">
+    <style type="text/css">
+
+        #form ul {
+            list-style-type: none;
+            padding: 0;
+            margin-left: 0;
+        }
+
+    </style>
+
+    <div class="mainDiv">
+
+        <h:form id="headerMsgForm" prependId="false">
+            <p:growl id="growl" showDetail="false" sticky="true"/>
+        </h:form>
+
+        <div id="headerDiv">
+            <ui:insert name="header">
+                <ui:include src="/header.xhtml"/>
+            </ui:insert>
+        </div>
+
+        <div id="content">
+            <ui:insert name="content" >
+                <ui:include src="/template/common/commonContent.xhtml" />
+            </ui:insert>
+        </div>
+
+    </div>
+</h:body>
+
+</html>

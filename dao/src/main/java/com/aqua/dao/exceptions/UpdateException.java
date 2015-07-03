@@ -3,7 +3,7 @@ package com.aqua.dao.exceptions;
 /**
  * @author: vzenkov
  */
-public class UpdateException extends Exception {
+public class UpdateException extends RuntimeException {
 
     public UpdateException() {
     }

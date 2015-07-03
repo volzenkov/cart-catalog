@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author: vzenkov
  */
-public interface GenericDAO {
+public interface CommonDAO {
     
     /**
      * Create new record in DB

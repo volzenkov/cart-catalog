@@ -15,7 +15,7 @@ import java.util.List;
  * Created by kama3 on 29.06.2015.
  */
 @ManagedBean(name = "attributeDefView")
-@ViewScoped
+@SessionScoped
 public class AttributeDefView implements Serializable {
 
     private AttributeDef newAttributeDef;

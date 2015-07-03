@@ -20,110 +20,22 @@
     </converter>
 
     <navigation-rule>
-        <from-view-id>/index.xhtml</from-view-id>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>toCategories</from-outcome>
             <to-view-id>/category.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>toUsers</from-outcome>
-            <to-view-id>/user.xhtml</to-view-id>
+            <from-outcome>toAttributeDefs</from-outcome>
+            <to-view-id>/attributeDef.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>loginSuccess</from-outcome>
-            <to-view-id>/index.xhtml</to-view-id>
+            <from-outcome>toCatalogItems</from-outcome>
+            <to-view-id>/catalogItem.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
-        <navigation-case>
-            <from-outcome>toChapters</from-outcome>
-            <to-view-id>/index.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-
-
-    <navigation-rule>
-        <from-view-id>/category.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>loginSuccess</from-outcome>
-            <to-view-id>/category.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toChapters</from-outcome>
-            <to-view-id>/index.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toDocuments</from-outcome>
-            <to-view-id>/document.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toUsers</from-outcome>
-            <to-view-id>/user.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toCategories</from-outcome>
-            <to-view-id>/category.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-
-    <navigation-rule>
-        <from-view-id>/document.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>loginSuccess</from-outcome>
-            <to-view-id>/document.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toCategories</from-outcome>
-            <to-view-id>/category.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toChapters</from-outcome>
-            <to-view-id>/index.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toUsers</from-outcome>
-            <to-view-id>/user.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toDocuments</from-outcome>
-            <to-view-id>/document.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-
-    <navigation-rule>
-        <from-view-id>/user.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>toChapters</from-outcome>
-            <to-view-id>/index.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>toUsers</from-outcome>
-            <to-view-id>/user.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-
-
-    <navigation-rule>
-    <from-view-id>*</from-view-id>
-    <navigation-case>
-        <from-outcome>logout</from-outcome>
-        <to-view-id>/index.xhtml</to-view-id>
-        <redirect/>
-    </navigation-case>
     </navigation-rule>
 
 </faces-config>

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * Created by kama3 on 29.06.2015.
  */
 @ManagedBean(name = "categoryTreeView")
-@ViewScoped
+@SessionScoped
 public class CategoryView implements Serializable {
 
     private TreeNode root;

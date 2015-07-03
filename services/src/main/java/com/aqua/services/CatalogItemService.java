@@ -1,23 +1,23 @@
 package com.aqua.services;
 
-import com.aqua.domain.AttributeDef;
+import com.aqua.domain.CatalogItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class AttributeDefService {
+public class CatalogItemService {
 
     @Autowired
     private BaseCRUDHelper baseCRUDHelper;
 
-    public void save(AttributeDef attributeDef) {
-        baseCRUDHelper.saveOrUpdate(attributeDef);
+    public void save(CatalogItem catalogItem) {
+        baseCRUDHelper.saveOrUpdate(catalogItem);
     }
 
-    public List<AttributeDef> list() {
-        return baseCRUDHelper.list(AttributeDef.class);
+    public List<CatalogItem> list() {
+        return baseCRUDHelper.list(CatalogItem.class);
     }
 
     public void setBaseCRUDHelper(BaseCRUDHelper baseCRUDHelper) {

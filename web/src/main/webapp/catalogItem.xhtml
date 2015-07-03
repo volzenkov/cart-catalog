@@ -1,0 +1,123 @@
+<ui:composition template="commonLayout.xhtml" name="category"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="content">
+
+        <h:form id="catalogItemForm" prependId="false">
+
+            <p:commandButton value="add" action="#{catalogItemView.initNewCatalogItemDialog()}"
+                             oncomplete="newCatalogItemDlg.show()"/>
+
+            <p:dataTable id="catalogItemTable" var="catalogItem" value="#{catalogItemView.catalogItems}" sortMode="multiple">
+                <p:column headerText="Id" sortBy="#{catalogItem.id}">
+                    <h:outputText value="#{catalogItem.id}"/>
+                </p:column>
+
+                <p:column headerText="Name" sortBy="#{catalogItem.name}">
+                    <h:outputText value="#{catalogItem.name}"/>
+                </p:column>
+
+                <p:column headerText="Parent" sortBy="#{catalogItem.parent.name}">
+                    <h:outputText value="#{catalogItem.parent.name}"/>
+                </p:column>
+
+                <p:column headerText="Updated" sortBy="#{catalogItem.updated}">
+                    <h:outputText value="#{catalogItem.updated}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <h:form prependId="false">
+
+            <p:dialog header="New CatalogItem" showEffect="fade" widgetVar="newCatalogItemDlg" modal="true" dynamic="true" closable="false">
+
+                <p:tabView dynamic="true" cache="true">
+                    <p:tab title="General">
+                        <h:panelGrid columns="2" cellpadding="10">
+
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Attribytes">
+                        <h:panelGrid columns="2" cellpadding="10">
+
+                        </h:panelGrid>
+                    </p:tab>
+                </p:tabView>
+
+
+                <p:outputPanel id="newCatalogItemPanel" autoUpdate="true">
+                    <h:panelGrid columns="2" id="newCatalogItemPanelGrid">
+                        <h:outputLabel for="newCatalogItemName" value="Name: *"/>
+
+                        <p:inputText id="newCatalogItemName" value="#{catalogItemView.newCatalogItem.name}"
+                                     required="true" size="20"
+                                     requiredMessage="Заполните обязательное поле"
+                                     validatorMessage="Недопустимое значение">
+                            <f:validateLength minimum="3" maximum="40"/>
+                        </p:inputText>
+                        <h:outputLabel/>
+                        <p:message for="newCatalogItemName"/>
+
+                        <h:outputLabel value="Parent: *"/>
+                        <p:commandButton value="select" oncomplete="newCatalogItemParentDlg.show()"/>
+
+                    </h:panelGrid>
+                    <h:panelGroup layout="block" columns="2" style="text-align: center">
+                        <p:commandButton value="Cancel" style="margin: 5px 25px;"
+                                         oncomplete="newCatalogItemDlg.hide()" immediate="true"/>
+                        <p:commandButton value="Ok" style="margin: 5px 25px;"
+                                         action="#{catalogItemView.addCatalogItem()}"
+                                         oncomplete="newCatalogItemDlg.hide()" update="@([id$=catalogItemTable])"/>
+                    </h:panelGroup>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:dialog header="Select parent" showEffect="fade" widgetVar="newCatalogItemParentDlg" modal="true"
+                      dynamic="true" closable="false">
+                <p:outputPanel autoUpdate="true">
+                    <p:outputPanel>
+                        <p:tree value="#{categoryTreeView.root}" var="category" dynamic="true" selectionMode="single" selection="#{catalogItemView.newCatalogItemParent}">
+                            <p:treeNode>
+                                <h:outputText value="#{category.name}" />
+                            </p:treeNode>
+                        </p:tree>
+                    </p:outputPanel>
+                    <h:panelGroup layout="block" columns="2" style="text-align: center">
+                        <p:commandButton value="Cancel" style="margin: 5px 25px;"
+                                         oncomplete="newCatalogItemParentDlg.hide()" immediate="true"/>
+                        <p:commandButton value="Ok" style="margin: 5px 25px;"
+                                         action="#{catalogItemView.addCatalogItem()}"
+                                         oncomplete="newCatalogItemParentDlg.hide()"/>
+                    </h:panelGroup>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:dialog header="Select parent" showEffect="fade" widgetVar="newCatalogItemParentDlg" modal="true"
+                      dynamic="true" closable="false">
+                <p:outputPanel autoUpdate="true">
+                    <p:outputPanel>
+                        <p:tree value="#{categoryTreeView.root}" var="category" dynamic="true" selectionMode="single" selection="#{catalogItemView.newCatalogItemParent}">
+                            <p:treeNode>
+                                <h:outputText value="#{category.name}" />
+                            </p:treeNode>
+                        </p:tree>
+                    </p:outputPanel>
+                    <h:panelGroup layout="block" columns="2" style="text-align: center">
+                        <p:commandButton value="Cancel" style="margin: 5px 25px;"
+                                         oncomplete="newCatalogItemParentDlg.hide()" immediate="true"/>
+                        <p:commandButton value="Ok" style="margin: 5px 25px;"
+                                         action="#{catalogItemView.addCatalogItem()}"
+                                         oncomplete="newCatalogItemParentDlg.hide()"/>
+                    </h:panelGroup>
+                </p:outputPanel>
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,6 +1,6 @@
 package com.aqua.dao.impl;
 
-import com.aqua.dao.GenericDAO;
+import com.aqua.dao.CommonDAO;
 import com.aqua.dao.exceptions.CreateException;
 import com.aqua.dao.exceptions.FinderException;
 import com.aqua.dao.exceptions.RemoveException;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -21,8 +20,7 @@ import java.util.Set;
  * @author: vzenkov
  */
 @Repository
-@Transactional
-public class GenericDAOImpl implements GenericDAO {
+public class CommonDAOImpl implements CommonDAO {
 
     @Autowired
     private SessionFactory sessionFactory;

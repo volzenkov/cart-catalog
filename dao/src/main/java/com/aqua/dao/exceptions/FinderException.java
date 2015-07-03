@@ -3,7 +3,7 @@ package com.aqua.dao.exceptions;
 /**
  * @author: vzenkov
  */
-public class FinderException extends Exception {
+public class FinderException extends RuntimeException {
 
     public FinderException() {
     }

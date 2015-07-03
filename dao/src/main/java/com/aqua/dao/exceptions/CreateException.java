@@ -3,7 +3,7 @@ package com.aqua.dao.exceptions;
 /**
  * @author: vzenkov
  */
-public class CreateException extends Exception {
+public class CreateException extends RuntimeException {
 
     public CreateException() {
     }

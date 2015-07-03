@@ -1,70 +1,70 @@
-<ui:composition name="attributeDef"
+<ui:composition template="commonLayout.xhtml" name="category"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets">
 
+    <ui:define name="content">
 
-    <h:form id="attributeDefForm" prependId="false">
+        <h:form id="attributeDefForm" prependId="false">
 
-        <p:commandButton value="add" action="#{attributeDefView.initNewAttributeDefDialog()}" oncomplete="newAttributeDlg.show()" />
-        <p:commandButton value="save" action="#{attributeDefView.addAttributeDef()}" />
+            <p:commandButton value="add" action="#{attributeDefView.initNewAttributeDefDialog()}"
+                             oncomplete="newAttributeDlg.show()"/>
 
-        <p:dataTable var="attributeDef" value="#{attributeDefView.attributeDefs}" sortMode="multiple">
-            <f:facet name="header">
-                Multiple Column Sort with Metakey
-            </f:facet>
-            <p:column headerText="Id" sortBy="#{attributeDef.id}">
-                <h:outputText value="#{attributeDef.id}" />
-            </p:column>
+            <p:dataTable id="attributeDefTable" var="attributeDef" value="#{attributeDefView.attributeDefs}" sortMode="multiple">
+                <p:column headerText="Id" sortBy="#{attributeDef.id}">
+                    <h:outputText value="#{attributeDef.id}"/>
+                </p:column>
 
-            <p:column headerText="Year" sortBy="#{attributeDef.name}">
-                <h:outputText value="#{attributeDef.name}" />
-            </p:column>
+                <p:column headerText="Name" sortBy="#{attributeDef.name}">
+                    <h:outputText value="#{attributeDef.name}"/>
+                </p:column>
 
-            <p:column headerText="Brand" sortBy="#{attributeDef.type}">
-                <h:outputText value="#{attributeDef.type}" />
-            </p:column>
+                <p:column headerText="Type" sortBy="#{attributeDef.type}">
+                    <h:outputText value="#{attributeDef.type}"/>
+                </p:column>
 
-            <p:column headerText="Color" sortBy="#{attributeDef.sortingOrder}">
-                <h:outputText value="#{attributeDef.sortingOrder}" />
-            </p:column>
-        </p:dataTable>
+                <p:column headerText="Order" sortBy="#{attributeDef.sortingOrder}">
+                    <h:outputText value="#{attributeDef.sortingOrder}"/>
+                </p:column>
+            </p:dataTable>
 
-    </h:form>
+            <p:dialog header="New AttributeDef" showEffect="fade" widgetVar="newAttributeDlg" modal="true"
+                      dynamic="true" closable="false">
+                <p:outputPanel id="newAttributePanel" autoUpdate="true">
+                    <h:panelGrid columns="2" id="newAttributePanelGrid">
+                        <h:outputLabel for="newAttributeName" value="Name: *"/>
+                        <p:inputText id="newAttributeName" value="#{attributeDefView.newAttributeDef.name}"
+                                     required="true" size="20"
+                                     requiredMessage="Заполните обязательное поле"
+                                     validatorMessage="Недопустимое значение">
+                            <f:validateLength minimum="3" maximum="40"/>
+                        </p:inputText>
+                        <h:outputLabel/>
+                        <p:message for="newAttributeName"/>
 
-    <h:form prependId="false">
-        <p:dialog header="New AttributeDef" showEffect="fade" widgetVar="newAttributeDlg" modal="true" dynamic="true" closable="false">
-            <p:outputPanel id="newAttributePanel" autoUpdate="true">
-                <h:panelGrid columns="2" id="newAttributePanelGrid">
-                    <h:outputLabel for="newAttributeName" value="Name: *"/>
-                    <p:inputText id="newAttributeName" value="#{attributeDefView.newAttributeDef.name}"  required="true" size="20"
-                                 requiredMessage="Заполните обязательное поле"
-                                 validatorMessage="Недопустимое значение">
-                        <f:validateLength minimum="3" maximum="40"/>
-                    </p:inputText>
-                    <h:outputLabel/>
-                    <p:message for="newAttributeName"/>
+                        <h:outputLabel value="Type: *"/>
+                        <h:selectOneMenu value="#{attributeDefView.newAttributeDef.type}">
+                            <f:selectItems value="#{attributeDefController.attributeTypes}"
+                                           var="type"
+                                           itemLabel="#{type}"
+                                           itemValue="#{type}"/>
+                        </h:selectOneMenu>
 
-                    <h:outputLabel value="Type: *"/>
-                    <h:selectOneMenu value="#{attributeDefView.newAttributeDef.type}">
-                        <f:selectItems value="#{attributeDefController.attributeTypes}"
-                                       var="type"
-                                       itemLabel="#{type}"
-                                       itemValue="#{type}"/>
-                    </h:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGroup layout="block" columns="2" style="text-align: center">
+                        <p:commandButton value="Cancel" style="margin: 5px 25px;"
+                                         oncomplete="newAttributeDlg.hide()" immediate="true"/>
+                        <p:commandButton value="Ok" style="margin: 5px 25px;"
+                                         action="#{attributeDefView.addAttributeDef()}"
+                                         oncomplete="newAttributeDlg.hide()" update="@([id$=attributeDefTable])"/>
+                    </h:panelGroup>
+                </p:outputPanel>
+            </p:dialog>
 
-                </h:panelGrid>
-                <h:panelGroup layout="block" columns="2" style="text-align: center">
-                    <p:commandButton value="Cancel" style="margin: 5px 25px;"
-                                     oncomplete="newAttributeDlg.hide()" immediate="true"/>
-                    <p:commandButton value="Ok" style="margin: 5px 25px;" action="#{attributeDefView.addAttributeDef()}"
-                                     oncomplete="newAttributeDlg.hide()" update="@([id$=attributeDef])"/>
-                </h:panelGroup>
-            </p:outputPanel>
-        </p:dialog>
-    </h:form>
+        </h:form>
 
+    </ui:define>
 
 </ui:composition>

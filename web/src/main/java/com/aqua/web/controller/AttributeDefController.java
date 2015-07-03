@@ -27,7 +27,7 @@ public class AttributeDefController {
     }
 
     public List<AttributeDef> listAttributeDefs() {
-        return attributeDefService.listAttributeDefs();
+        return attributeDefService.list();
     }
 
     public void setAttributeDefService(AttributeDefService attributeDefService) {
