@@ -13,7 +13,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class CatalogItem extends CatalogNode {
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "catalog_item_id_fk")
     private List<AttributeValue> attributeValues = new ArrayList<>();
 

@@ -1,9 +1,12 @@
 package com.aqua.web.view;
 
+import com.aqua.domain.AttributeDef;
+import com.aqua.domain.AttributeValue;
 import com.aqua.domain.CatalogItem;
 import com.aqua.domain.Category;
 import com.aqua.web.controller.CatalogItemController;
 import org.primefaces.model.TreeNode;
+import org.w3c.dom.Attr;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -22,7 +25,10 @@ public class CatalogItemView implements Serializable {
     private CatalogItem newCatalogItem;
     private TreeNode newCatalogItemParent;
 
+    private AttributeDef newCatalogItemAttributeDef;
+
     private List<CatalogItem> catalogItems;
+    private List<CatalogItem> selectedCatalogItems;
 
     @ManagedProperty("#{catalogItemController}")
     private CatalogItemController catalogItemController;
@@ -37,6 +43,10 @@ public class CatalogItemView implements Serializable {
         newCatalogItem = new CatalogItem();
     }
 
+    public void initAddCatalogItemAttributeDialog() {
+        newCatalogItemAttributeDef = new AttributeDef();
+    }
+
     public void initCatalogItemsList() {
         catalogItems = catalogItemController.listCatalogItems();
     }
@@ -49,6 +59,21 @@ public class CatalogItemView implements Serializable {
             }
             catalogItemController.addCatalogItem(newCatalogItem);
             initCatalogItemsList();
+        }
+    }
+
+    public void addCatalogItemAttribute() {
+        CatalogItem newCatalogItem = this.getNewCatalogItem();
+        if (newCatalogItem != null) {
+            if (newCatalogItemAttributeDef != null) {
+                newCatalogItem.getAttributeValues().add(new AttributeValue(newCatalogItemAttributeDef, newCatalogItem, null));
+            }
+        }
+    }
+
+    public void initEditCatalogItemDialog() {
+        if (this.getSelectedCatalogItems() != null && this.getSelectedCatalogItems().size() > 0) {
+            this.newCatalogItem = this.getSelectedCatalogItems().get(0);
         }
     }
 
@@ -78,5 +103,25 @@ public class CatalogItemView implements Serializable {
 
     public void setNewCatalogItemParent(TreeNode newCatalogItemParent) {
         this.newCatalogItemParent = newCatalogItemParent;
+    }
+
+    public void setCatalogItems(List<CatalogItem> catalogItems) {
+        this.catalogItems = catalogItems;
+    }
+
+    public List<CatalogItem> getSelectedCatalogItems() {
+        return selectedCatalogItems;
+    }
+
+    public void setSelectedCatalogItems(List<CatalogItem> selectedCatalogItems) {
+        this.selectedCatalogItems = selectedCatalogItems;
+    }
+
+    public AttributeDef getNewCatalogItemAttributeDef() {
+        return newCatalogItemAttributeDef;
+    }
+
+    public void setNewCatalogItemAttributeDef(AttributeDef newCatalogItemAttributeDef) {
+        this.newCatalogItemAttributeDef = newCatalogItemAttributeDef;
     }
 }

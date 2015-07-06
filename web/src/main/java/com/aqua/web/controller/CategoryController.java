@@ -24,21 +24,6 @@ public class CategoryController {
         categoryService.save(category);
     }
 
-    public TreeNode dummyCategories() {
-
-        TreeNode root = new DefaultTreeNode(new Category("Root"), null);
-
-        TreeNode node1 = new DefaultTreeNode(new Category("Node-1"), root);
-        TreeNode node2 = new DefaultTreeNode(new Category("Node-2"), root);
-
-        new DefaultTreeNode(new Category("Node-1.1"), node1);
-        new DefaultTreeNode(new Category("Node-1.2"), node1);
-
-        new DefaultTreeNode(new Category("Node-2.2"), node2);
-
-        return root;
-    }
-
     public TreeNode buildTree() {
         Tree<Category> categoryTree = categoryService.buildCategoriesTree();
 

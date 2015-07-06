@@ -13,7 +13,7 @@
                             oncomplete="newCategoryDlg.show()"/>
             </p:contextMenu>
 
-            <p:treeTable id="categoryTree" value="#{categoryTreeView.root}" var="category" selectionMode="single"
+            <p:treeTable id="categoryTree" value="#{categoryTreeView.root}" var="category"
                          selection="#{categoryTreeView.selectedCategory}" dynamic="true">
                 <p:column headerText="Name">
                     <h:outputText value="#{category.name}"/>

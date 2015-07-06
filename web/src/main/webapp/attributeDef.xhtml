@@ -9,8 +9,9 @@
 
         <h:form id="attributeDefForm" prependId="false">
 
-            <p:commandButton value="add" action="#{attributeDefView.initNewAttributeDefDialog()}"
-                             oncomplete="newAttributeDlg.show()"/>
+            <p:contextMenu for="categoryTree">
+                <p:menuitem value="add" action="#{attributeDefView.initNewAttributeDefDialog()}" oncomplete="newAttributeDlg.show()"/>
+            </p:contextMenu>
 
             <p:dataTable id="attributeDefTable" var="attributeDef" value="#{attributeDefView.attributeDefs}" sortMode="multiple">
                 <p:column headerText="Id" sortBy="#{attributeDef.id}">
