@@ -9,7 +9,6 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -91,7 +90,7 @@ public class CommonDAOImpl implements CommonDAO {
 
             if (parameters != null) {
                 for (int i = 0; i < parameters.length; i++) {
-                    query.setParameter(i + 1, parameters[i]);
+                    query.setParameter(i, parameters[i]);
 
                     System.out.println("parameters: " + parameters[i]);
                 }

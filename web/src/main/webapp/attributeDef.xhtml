@@ -9,11 +9,18 @@
 
         <h:form id="attributeDefForm" prependId="false">
 
-            <p:contextMenu for="categoryTree">
-                <p:menuitem value="add" action="#{attributeDefView.initNewAttributeDefDialog()}" oncomplete="newAttributeDlg.show()"/>
-            </p:contextMenu>
-
             <p:dataTable id="attributeDefTable" var="attributeDef" value="#{attributeDefView.attributeDefs}" sortMode="multiple">
+
+                <f:facet name="header">
+                    <h:outputLabel value="Attribute Defs"/>
+                    <h:panelGroup>
+                        <p:commandButton value="add" action="#{attributeDefView.initNewAttributeDefDialog()}"
+                                         oncomplete="newAttributeDlg.show()" update="@([id$=attributeDialog])"/>
+                        <p:commandButton value="edit" action="#{catalogItemView.initEditCatalogItemDialog()}"
+                                         oncomplete="newAttributeDlg.show()" update="@([id$=attributeDialog])"/>
+                    </h:panelGroup>
+                </f:facet>
+
                 <p:column headerText="Id" sortBy="#{attributeDef.id}">
                     <h:outputText value="#{attributeDef.id}"/>
                 </p:column>
@@ -31,7 +38,7 @@
                 </p:column>
             </p:dataTable>
 
-            <p:dialog header="New AttributeDef" showEffect="fade" widgetVar="newAttributeDlg" modal="true"
+            <p:dialog id="attributeDialog" header="New AttributeDef" showEffect="fade" widgetVar="newAttributeDlg" modal="true"
                       dynamic="true" closable="false">
                 <p:outputPanel id="newAttributePanel" autoUpdate="true">
                     <h:panelGrid columns="2" id="newAttributePanelGrid">

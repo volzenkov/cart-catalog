@@ -2,6 +2,12 @@ package com.aqua.domain;
 
 import javax.persistence.*;
 
+@NamedQueries({
+        @NamedQuery(name = "getDistinctAttributeValuesByAttributeDef", query = "select distinct av.value from AttributeValue av where av.attributeDef.id = ?"),
+        @NamedQuery(name = "getDistinctCatalogItemIdByAttributeValues", query = "" +
+                "select distinct av.catalogItem.id from AttributeValue av where av.attributeDef.id = ?")
+})
+
 @Entity
 @Table(name = "attribute_value")
 @Inheritance(strategy = InheritanceType.JOINED)

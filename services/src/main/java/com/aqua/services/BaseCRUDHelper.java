@@ -5,7 +5,11 @@ import com.aqua.dao.exceptions.CreateException;
 import com.aqua.dao.exceptions.FinderException;
 import com.aqua.dao.exceptions.UpdateException;
 import com.aqua.domain.AttributeDef;
+import com.aqua.domain.CatalogItem;
 import com.aqua.domain.Identity;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,4 +51,11 @@ public class BaseCRUDHelper {
             return null;
         }
     }
+
+    @Transactional(readOnly = true)
+    public <T> List<T> executeNamedQueryWithResult(String namedQuery, Object[] parameters) {
+        return commonDAO.executeNamedQueryWithResult(namedQuery, parameters);
+    }
+
 }
+

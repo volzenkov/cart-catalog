@@ -2,6 +2,7 @@ package com.aqua.web.controller;
 
 import com.aqua.domain.CatalogItem;
 import com.aqua.domain.AttributeType;
+import com.aqua.services.CatalogItemFilter;
 import com.aqua.services.CatalogItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,10 @@ public class CatalogItemController {
 
     public List<CatalogItem> listCatalogItems() {
         return catalogItemService.list();
+    }
+
+    public List<CatalogItem> listCatalogItemByFilters(List<CatalogItemFilter> catalogItemFilters) {
+        return catalogItemService.listByFilters(catalogItemFilters);
     }
 
     public void setCatalogItemService(CatalogItemService catalogItemService) {

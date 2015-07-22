@@ -1,6 +1,7 @@
 package com.aqua.web.controller;
 
 import com.aqua.domain.Category;
+import com.aqua.services.BaseCRUDHelper;
 import com.aqua.services.CategoryService;
 import com.aqua.services.tree.Tree;
 import com.aqua.services.tree.Visitor;
@@ -16,6 +17,9 @@ import javax.faces.bean.ManagedBean;
 @ManagedBean(name = "categoryController")
 @ApplicationScoped
 public class CategoryController {
+
+    @Autowired
+    private BaseCRUDHelper baseCRUDHelper;
 
     @Autowired
     private CategoryService categoryService;
