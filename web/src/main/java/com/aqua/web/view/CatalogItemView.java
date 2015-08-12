@@ -1,17 +1,23 @@
 package com.aqua.web.view;
 
-import com.aqua.domain.AttributeDef;
-import com.aqua.domain.AttributeValue;
 import com.aqua.domain.CatalogItem;
 import com.aqua.domain.Category;
+import com.aqua.services.CatalogItemFilter;
 import com.aqua.web.controller.CatalogItemController;
+import com.aqua.web.controller.CatalogItemFilterController;
+import com.aqua.web.controller.CategoryController;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.primefaces.model.TreeNode;
-import org.w3c.dom.Attr;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.DefaultSubMenu;
+import org.primefaces.model.menu.MenuModel;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,106 +28,114 @@ import java.util.List;
 @SessionScoped
 public class CatalogItemView implements Serializable {
 
-    private CatalogItem newCatalogItem;
-    private TreeNode newCatalogItemParent;
-
-    private AttributeDef newCatalogItemAttributeDef;
-
+    private TreeNode categoriesTree;
+//    private MenuModel baseCategoriesMenu;
+    private List<Category> baseCategories;
+    private Category selectedBaseCategory;
     private List<CatalogItem> catalogItems;
-    private List<CatalogItem> selectedCatalogItems;
+
+    private List<CatalogItemFilter> catalogItemFilters;
 
     @ManagedProperty("#{catalogItemController}")
     private CatalogItemController catalogItemController;
 
+    @ManagedProperty("#{categoryController}")
+    private CategoryController categoryController;
+
+    @ManagedProperty("#{catalogItemFilterController}")
+    private CatalogItemFilterController catalogItemFilterController;
+
     @PostConstruct
     public void init() {
-        initNewCatalogItemDialog();
-        initCatalogItemsList();
+        baseCategories = categoryController.getChildCategories(1);
+        selectedBaseCategory = baseCategories.get(0);
+        initCategoriesTree();
+        initCatalogItems();
+        initCatalogItemFiltersList();
+//        baseCategoriesMenu = new DefaultMenuModel();
+//        for (Category baseCategory : baseCategories) {
+//            DefaultMenuItem defaultMenuItem = new DefaultMenuItem(baseCategory.getName());
+//            defaultMenuItem.setCommand("#{mantClienteMB.save}");
+//            baseCategoriesMenu.addElement(defaultMenuItem);
+//        }
     }
 
-    public void initNewCatalogItemDialog() {
-        newCatalogItem = new CatalogItem();
+    public void initCatalogItemFiltersList() {
+        catalogItemFilters = catalogItemFilterController.listCatalogItemFilters();
     }
 
-    public void initAddCatalogItemAttributeDialog() {
-        newCatalogItemAttributeDef = new AttributeDef();
+    public void initCatalogItems() {
+        catalogItems = catalogItemController.listCatalogItemByFilters(selectedBaseCategory, catalogItemFilters);
     }
 
-    public void initCatalogItemsList() {
-        catalogItems = catalogItemController.listCatalogItems();
+    public void initCategoriesTree() {
+        categoriesTree = categoryController.buildTree(selectedBaseCategory);
     }
 
-    public void addCatalogItem() {
-        CatalogItem newCatalogItem = this.getNewCatalogItem();
-        if (newCatalogItem != null) {
-            if (newCatalogItemParent != null) {
-                newCatalogItem.setParent((Category) newCatalogItemParent.getData());
-            }
-            catalogItemController.addCatalogItem(newCatalogItem);
-            initCatalogItemsList();
-        }
+    public TreeNode getCategoriesTree() {
+        return categoriesTree;
     }
 
-    public void addCatalogItemAttribute() {
-        CatalogItem newCatalogItem = this.getNewCatalogItem();
-        if (newCatalogItem != null) {
-            if (newCatalogItemAttributeDef != null) {
-                newCatalogItem.getAttributeValues().add(new AttributeValue(newCatalogItemAttributeDef, newCatalogItem, null));
-            }
-        }
+    public void setCategoriesTree(TreeNode categoriesTree) {
+        this.categoriesTree = categoriesTree;
     }
 
-    public void initEditCatalogItemDialog() {
-        if (this.getSelectedCatalogItems() != null && this.getSelectedCatalogItems().size() > 0) {
-            this.newCatalogItem = this.getSelectedCatalogItems().get(0);
-        }
+    public List<Category> getBaseCategories() {
+        return baseCategories;
     }
 
-    public CatalogItem getNewCatalogItem() {
-        return newCatalogItem;
+    public void setBaseCategories(List<Category> baseCategories) {
+        this.baseCategories = baseCategories;
     }
 
-    public void setNewCatalogItem(CatalogItem newCatalogItem) {
-        this.newCatalogItem = newCatalogItem;
+    public Category getSelectedBaseCategory() {
+        return selectedBaseCategory;
     }
 
-    public CatalogItemController getCatalogItemController() {
-        return catalogItemController;
+    public void setSelectedBaseCategory(Category selectedBaseCategory) {
+        this.selectedBaseCategory = selectedBaseCategory;
+        initCategoriesTree();
+        initCatalogItems();
+        initCatalogItemFiltersList();
     }
 
     public List<CatalogItem> getCatalogItems() {
         return catalogItems;
     }
 
-    public void setCatalogItemController(CatalogItemController catalogItemController) {
-        this.catalogItemController = catalogItemController;
-    }
-
-    public TreeNode getNewCatalogItemParent() {
-        return newCatalogItemParent;
-    }
-
-    public void setNewCatalogItemParent(TreeNode newCatalogItemParent) {
-        this.newCatalogItemParent = newCatalogItemParent;
-    }
-
     public void setCatalogItems(List<CatalogItem> catalogItems) {
         this.catalogItems = catalogItems;
     }
 
-    public List<CatalogItem> getSelectedCatalogItems() {
-        return selectedCatalogItems;
+    public List<CatalogItemFilter> getCatalogItemFilters() {
+        return catalogItemFilters;
     }
 
-    public void setSelectedCatalogItems(List<CatalogItem> selectedCatalogItems) {
-        this.selectedCatalogItems = selectedCatalogItems;
+    public void setCatalogItemFilters(List<CatalogItemFilter> catalogItemFilters) {
+        this.catalogItemFilters = catalogItemFilters;
     }
 
-    public AttributeDef getNewCatalogItemAttributeDef() {
-        return newCatalogItemAttributeDef;
+    public CatalogItemController getCatalogItemController() {
+        return catalogItemController;
     }
 
-    public void setNewCatalogItemAttributeDef(AttributeDef newCatalogItemAttributeDef) {
-        this.newCatalogItemAttributeDef = newCatalogItemAttributeDef;
+    public void setCatalogItemController(CatalogItemController catalogItemController) {
+        this.catalogItemController = catalogItemController;
+    }
+
+    public CategoryController getCategoryController() {
+        return categoryController;
+    }
+
+    public void setCategoryController(CategoryController categoryController) {
+        this.categoryController = categoryController;
+    }
+
+    public CatalogItemFilterController getCatalogItemFilterController() {
+        return catalogItemFilterController;
+    }
+
+    public void setCatalogItemFilterController(CatalogItemFilterController catalogItemFilterController) {
+        this.catalogItemFilterController = catalogItemFilterController;
     }
 }

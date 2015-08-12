@@ -1,4 +1,4 @@
-<ui:composition template="commonLayout.xhtml" name="category"
+<ui:composition template="common/commonLayout.xhtml" name="cataloItem"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
@@ -9,171 +9,74 @@
 
         <h:form id="catalogItemForm" prependId="false">
 
-            <p:dataTable id="catalogItemTable" var="catalogItem" value="#{catalogItemView.catalogItems}"
-                         selection="#{catalogItemView.selectedCatalogItems}" rowKey="#{catalogItem.id}">
+            <p:layout>
+                <p:layoutUnit position="north" resizable="true">
+                    <p:dataList value="#{catalogItemView.baseCategories}" var="baseCategory" type="ordered">
+                        <p:commandLink value="#{baseCategory.name}" action="toCatalogItems">
+                            <f:setPropertyActionListener value="#{baseCategory}"
+                                                         target="#{catalogItemView.selectedBaseCategory}"/>
+                        </p:commandLink>
+                    </p:dataList>
+                </p:layoutUnit>
 
-                <f:facet name="header">
-                    <h:outputLabel value="Catalog Items "/>
-                    <h:panelGroup>
-                        <p:commandButton value="add" action="#{catalogItemView.initNewCatalogItemDialog()}"
-                                         oncomplete="newCatalogItemDlg.show()" update="@([id$=itemDialog])"/>
-                        <p:commandButton value="edit" action="#{catalogItemView.initEditCatalogItemDialog()}"
-                                         oncomplete="newCatalogItemDlg.show()" update="@([id$=itemDialog])"/>
-                    </h:panelGroup>
-                </f:facet>
 
-                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                <p:layoutUnit position="west" resizable="true" maxSize="250">
+                    <p:tree id="categoriesTree" value="#{catalogItemView.categoriesTree}" var="node" dynamic="true">
+                        <p:treeNode>
+                            <h:outputText value="#{node.name}"/>
+                        </p:treeNode>
+                    </p:tree>
 
-                <p:column headerText="Id" sortBy="#{catalogItem.id}">
-                    <h:outputText value="#{catalogItem.id}"/>
-                </p:column>
+                </p:layoutUnit>
 
-                <p:column headerText="Name" sortBy="#{catalogItem.name}">
-                    <h:outputText value="#{catalogItem.name}"/>
-                </p:column>
+                <p:layoutUnit position="center" resizable="true" mixSize="600">
+                    <p:dataGrid var="catalogItem" value="#{catalogItemView.catalogItems}" columns="2" layout="grid"
+                                rows="12" paginator="true" id="catalogItemTable"
+                                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="6,12,16">
 
-                <p:column headerText="Parent" sortBy="#{catalogItem.parent.name}">
-                    <h:outputText value="#{catalogItem.parent.name}"/>
-                </p:column>
+                        <f:facet name="header">
+                            Cars for Sale
+                        </f:facet>
 
-                <p:column headerText="Updated" sortBy="#{catalogItem.updated}">
-                    <h:outputText value="#{catalogItem.updated}"/>
-                </p:column>
-            </p:dataTable>
-        </h:form>
+                        <p:panel header="#{catalogItem.name}" style="text-align:center">
+                            #{catalogItem.dimensions.length} x #{catalogItem.dimensions.width} x #{catalogItem.dimensions.height}
+                        </p:panel>
 
-        <h:form prependId="false">
+                    </p:dataGrid>
 
-            <p:dialog header="New CatalogItem" showEffect="fade" widgetVar="newCatalogItemDlg" modal="true"
-                      dynamic="true" closable="false" id="itemDialog">
+                </p:layoutUnit>
 
-                <p:tabView dynamic="true" cache="true">
-                    <p:tab title="General">
-                        <p:outputPanel id="newCatalogItemPanel" autoUpdate="true">
-                            <h:panelGrid columns="2" id="newCatalogItemPanelGrid">
-                                <h:outputLabel for="newCatalogItemName" value="Name: *"/>
+                <p:layoutUnit position="east" resizable="true" maxSize="250">
+                    <p:dataList id="catalogItemFilterTable" value="#{catalogItemView.catalogItemFilters}"
+                                var="catalogItemFilter" type="definition">
+                        <f:facet name="header">
+                            <h:outputLabel value="Catalog Item Filters "/>
+                            <h:panelGroup>
+                                <p:commandButton value="apply" action="#{catalogItemView.initCatalogItems()}"
+                                                 update="@([id$=catalogItemTable])"/>
+                                <p:commandButton value="reset"
+                                                 action="#{catalogItemView.initCatalogItemFiltersList()}"
+                                                 update="@([id$=catalogItemTable]) @([id$=catalogItemFilterTable])"/>
+                            </h:panelGroup>
+                        </f:facet>
 
-                                <p:inputText id="newCatalogItemName" value="#{catalogItemView.newCatalogItem.name}"
-                                             required="true" size="20"
-                                             requiredMessage="Заполните обязательное поле"
-                                             validatorMessage="Недопустимое значение">
-                                    <f:validateLength minimum="3" maximum="40"/>
-                                </p:inputText>
-                                <h:outputLabel/>
-                                <p:message for="newCatalogItemName"/>
 
-                                <h:outputLabel value="Parent: *"/>
-                                <h:panelGrid columns="2">
-                                    <p:inputText value="#{catalogItemView.newCatalogItem.parent.name}" disabled="true"/>
-                                    <p:commandButton value="select" oncomplete="newCatalogItemParentDlg.show()" immediate="true"/>
-                                </h:panelGrid>
-                            </h:panelGrid>
+                        <p:panel header="#{catalogItemFilter.attributeDef.name}">
+                            <h:panelGroup columns="2" cellpadding="10">
 
-                        </p:outputPanel>
-                    </p:tab>
-                    <p:tab title="Attribytes">
-                        <p:dataTable id="attributesTable" var="attribute" value="#{catalogItemView.newCatalogItem.attributeValues}" sortMode="multiple"
-                                editable="true" editMode="cell">
+                                <p:selectManyCheckbox id="grid" value="#{catalogItemFilter.selectedValues}"
+                                                      layout="grid" columns="1">
+                                    <f:selectItems value="#{catalogItemFilter.values}" var="filter"
+                                                   itemLabel="#{filter}" itemValue="#{filter}"/>
+                                </p:selectManyCheckbox>
 
-                            <f:facet name="header">
-                                <h:outputLabel value="AttributeDefs"/>
-                                <h:panelGroup>
-                                    <p:commandButton value="add" action="#{catalogItemView.initAddCatalogItemAttributeDialog()}"
-                                                     oncomplete="newCatalogItemAttributeDlg.show()"/>
-                                    <p:commandButton value="delete" action="#{catalogItemView.initEditCatalogItemDialog()}"/>
-                                </h:panelGroup>
-                            </f:facet>
+                            </h:panelGroup>
+                        </p:panel>
 
-                            <p:column headerText="Name" sortBy="#{attribute.attributeDef.name}">
-                                <h:outputText value="#{attribute.attributeDef.name}"/>
-                            </p:column>
-
-                            <p:column headerText="Type" sortBy="#{attribute.attributeDef.type}">
-                                <h:outputText value="#{attribute.attributeDef.type}"/>
-                            </p:column>
-
-                            <p:column headerText="Value">
-                                <p:cellEditor>
-                                    <f:facet name="output"><h:outputText value="#{attribute.value}"/></f:facet>
-                                    <f:facet name="input"><p:inputText value="#{attribute.value}" style="width:96%"/></f:facet>
-                                </p:cellEditor>
-
-                            </p:column>
-                        </p:dataTable>
-                    </p:tab>
-                </p:tabView>
-
-                <h:panelGroup layout="block" columns="2" style="text-align: center">
-                    <p:commandButton value="Cancel" style="margin: 5px 25px;"
-                                     oncomplete="newCatalogItemDlg.hide()" immediate="true"/>
-                    <p:commandButton value="Ok" style="margin: 5px 25px;"
-                                     action="#{catalogItemView.addCatalogItem()}"
-                                     oncomplete="newCatalogItemDlg.hide()" update="@([id$=catalogItemTable])"/>
-                </h:panelGroup>
-
-            </p:dialog>
-        </h:form>
-
-        <h:form prependId="false">
-            <p:dialog header="Select parent" showEffect="fade" widgetVar="newCatalogItemParentDlg" modal="true"
-                      dynamic="true" closable="false">
-                <p:outputPanel autoUpdate="true">
-                    <p:outputPanel>
-                        <p:tree value="#{categoryTreeView.root}" var="category" dynamic="false" selectionMode="single"
-                                selection="#{catalogItemView.newCatalogItemParent}">
-                            <p:treeNode>
-                                <h:outputText value="#{category.name}"/>
-                            </p:treeNode>
-                        </p:tree>
-                    </p:outputPanel>
-                    <h:panelGroup layout="block" columns="2" style="text-align: center">
-                        <p:commandButton value="Cancel" style="margin: 5px 25px;"
-                                         oncomplete="newCatalogItemParentDlg.hide()" immediate="true"/>
-                        <p:commandButton value="Ok" style="margin: 5px 25px;"
-                                         action="#{catalogItemView.addCatalogItem()}"
-                                         oncomplete="newCatalogItemParentDlg.hide()"/>
-                    </h:panelGroup>
-                </p:outputPanel>
-            </p:dialog>
-
-        </h:form>
-
-        <h:form prependId="false">
-            <p:dialog header="Add Attribute" showEffect="fade" widgetVar="newCatalogItemAttributeDlg" modal="true"
-                      dynamic="true" closable="false">
-                <p:outputPanel autoUpdate="true">
-                    <p:outputPanel>
-                        <p:dataTable id="attributeDefTable" var="attributeDef" value="#{attributeDefView.attributeDefs}" sortMode="multiple"
-                                     selection="#{catalogItemView.newCatalogItemAttributeDef}" rowKey="#{attributeDef.id}">
-
-                            <p:column selectionMode="single" style="width:16px;text-align:center"/>
-
-                            <p:column headerText="Id" sortBy="#{attributeDef.id}">
-                                <h:outputText value="#{attributeDef.id}"/>
-                            </p:column>
-
-                            <p:column headerText="Name" sortBy="#{attributeDef.name}">
-                                <h:outputText value="#{attributeDef.name}"/>
-                            </p:column>
-
-                            <p:column headerText="Type" sortBy="#{attributeDef.type}">
-                                <h:outputText value="#{attributeDef.type}"/>
-                            </p:column>
-
-                            <p:column headerText="Order" sortBy="#{attributeDef.sortingOrder}">
-                                <h:outputText value="#{attributeDef.sortingOrder}"/>
-                            </p:column>
-                        </p:dataTable>
-                    </p:outputPanel>
-                    <h:panelGroup layout="block" columns="2" style="text-align: center">
-                        <p:commandButton value="Cancel" style="margin: 5px 25px;"
-                                         oncomplete="newCatalogItemAttributeDlg.hide()" immediate="true"/>
-                        <p:commandButton value="Ok" style="margin: 5px 25px;" update="@([id$=attributesTable])"
-                                         action="#{catalogItemView.addCatalogItemAttribute()}"
-                                         oncomplete="newCatalogItemAttributeDlg.hide()"/>
-                    </h:panelGroup>
-                </p:outputPanel>
-            </p:dialog>
+                    </p:dataList>
+                </p:layoutUnit>
+            </p:layout>
 
         </h:form>
 

@@ -11,7 +11,7 @@ public class Identity implements Serializable {
 
     @Id
     @GeneratedValue
-    @Column(name = "catalog_item_id")
+    @Column(name = "id")
     private Long id;
 
     public Long getId() {

@@ -27,6 +27,11 @@ public class CategoryService {
         return baseCRUDHelper.list(Category.class);
     }
 
+    public List<Category> listChildCategories(long parentId) {
+        return baseCRUDHelper.executeNamedQueryWithResult(
+                "getChildCategoriesByParentId", new Long[]{parentId});
+    }
+
     public Tree<Category> buildCategoriesTree() {
 
         try {
@@ -46,7 +51,7 @@ public class CategoryService {
 
             for (Category category : categories) {
                 Tree<Category> root = current;
-                for (Category node : buildParentsStack(category)) {
+                for (Category node : buildParentsStack(category, 1)) {
                     current = current.child(node);
                 }
                 current = root;
@@ -59,15 +64,48 @@ public class CategoryService {
         }
     }
 
-    private Deque<Category> buildParentsStack(Category category) {
+    private Deque<Category> buildParentsStack(Category category, long headCategoryId) {
         Deque<Category> parentsStack = new ArrayDeque<>();
         Category parent = category;
-        while (parent != null) {
+        while (parent != null && parent.getId() != headCategoryId) {
             parentsStack.push(parent);
             parent = parent.getParent();
         }
-        parentsStack.poll();
         return parentsStack;
+    }
+
+    public Tree<Category> buildCategoriesTree(Category parentCategory) {
+
+        try {
+
+            if (parentCategory != null) {
+                String idsPathCriteria = parentCategory.getId() + ".%";
+                if (parentCategory.getParentNumericPath() != null) {
+                    idsPathCriteria = parentCategory.getParentNumericPath() + idsPathCriteria;
+                }
+
+                List<Category> categories = baseCRUDHelper.executeNamedQueryWithResult(
+                        "getCategoriesByParentId", new String[]{idsPathCriteria});
+
+                Tree<Category> rootNode = new Tree<>(buildParentsStack(categories.get(0), parentCategory.getId()).getFirst());
+                Tree<Category> current = rootNode;
+
+                for (Category category : categories) {
+                    Tree<Category> root = current;
+                    for (Category node : buildParentsStack(category, parentCategory.getId())) {
+                        current = current.child(node);
+                    }
+                    current = root;
+                }
+
+                rootNode.accept(new PrintIndentedVisitor(0));
+                return rootNode;
+            } else {
+                throw new RuntimeException();
+            }
+        } catch (FinderException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

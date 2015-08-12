@@ -24,6 +24,7 @@
         <module>dao</module>
         <module>model</module>
         <module>web</module>
+        <module>admin-web</module>
     </modules>
 
     <repositories>

@@ -1,1 +1,1 @@
-<jsp:forward page="/category.xhtml"/>
+<jsp:forward page="/test/category.xhtml"/>

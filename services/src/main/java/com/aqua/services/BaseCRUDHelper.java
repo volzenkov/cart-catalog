@@ -36,6 +36,11 @@ public class BaseCRUDHelper {
     }
 
     @Transactional
+    public <T extends Identity> T getById(Class<T> clazz, Long id) {
+        return commonDAO.findByPrimaryKey(clazz, id);
+    }
+
+    @Transactional
     public <T extends Identity> void bulkSave(Collection<T> list) {
         for (T entity : list) {
             saveOrUpdate(entity);

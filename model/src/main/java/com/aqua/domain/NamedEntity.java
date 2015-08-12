@@ -11,7 +11,7 @@ public class NamedEntity extends PersistentEntity {
 
     @Column
     private String name;
-    @Column
+    @Column(length = 2048)
     private String description;
 
     public NamedEntity() {}

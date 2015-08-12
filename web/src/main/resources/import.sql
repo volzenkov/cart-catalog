@@ -1,1 +1,1 @@
-INSERT INTO `cart-catalog`.category (catalog_item_id, created, updated, description, name, enabled, parent_catalog_item_id) VALUES (1, '2015-01-01 00:00:00', '2015-01-01 00:00:00', 'Root catalog. User should not be able to observe this.', 'Root', 1, NULL );
+INSERT INTO `cart-catalog`.category (id, created, updated, description, name, enabled, parent_id) VALUES (1, '2015-01-01 00:00:00', '2015-01-01 00:00:00', 'Root catalog. User should not be able to observe this.', 'Root', 1, NULL );

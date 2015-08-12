@@ -4,7 +4,8 @@ import javax.persistence.*;
 
 
 @NamedQueries({
-        @NamedQuery(name = "getCategoriesByParentId", query = "from CatalogItem item where item.parent.id = :parentId"),
+        @NamedQuery(name = "getCategoriesByParentId", query = "from Category category where category.parentNumericPath like ?"),
+        @NamedQuery(name = "getChildCategoriesByParentId", query = "from Category category where category.parent.id = ?"),
         @NamedQuery(name = "getRootCategoriesItems", query = "from CatalogItem item where item.parent = null"),
 })
 

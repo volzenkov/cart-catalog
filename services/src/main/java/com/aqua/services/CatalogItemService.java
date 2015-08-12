@@ -1,11 +1,9 @@
 package com.aqua.services;
 
 import com.aqua.domain.CatalogItem;
+import com.aqua.domain.Category;
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,20 +35,39 @@ public class CatalogItemService {
 
     @Transactional(readOnly = true)
     public List<CatalogItem> listByFilters(List<CatalogItemFilter> catalogItemFilters) {
+        return listByFilters(baseCRUDHelper.getById(Category.class, 1L), catalogItemFilters);
+    }
 
+    @Transactional(readOnly = true)
+    public List<CatalogItem> listByFilters(Category parentCategory, List<CatalogItemFilter> catalogItemFilters) {
+
+        Set<Long> catalogItemIds = null;
         if (catalogItemFilters != null) {
             List<CatalogItemFilter> filters = new LinkedList<>();
             for (CatalogItemFilter catalogItemFilter : catalogItemFilters) {
-                if (catalogItemFilter.getSelectedValues().length > 0 && catalogItemFilter.getSelectedValues().length < catalogItemFilter.getValues().length) {
+                if (catalogItemFilter.getSelectedValues().length > 0 &&
+                        catalogItemFilter.getSelectedValues().length < catalogItemFilter.getValues().length) {
                     filters.add(catalogItemFilter);
                 }
             }
-//            List<CatalogItem> result = getByHibernateCriteria(catalogItemFilters);
-            List<CatalogItem> result = getBySqlQuery(filters);
-            return result;
-        } else {
-            return Collections.emptyList();
+
+            catalogItemIds = getByNamedQuery(filters);
         }
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(CatalogItem.class);
+
+        if (CollectionUtils.isNotEmpty(catalogItemIds)) {
+            criteria.add(Restrictions.in("id", catalogItemIds));
+        }
+
+        String parentIdsPath = parentCategory.getId() + ".%";
+        if (parentCategory.getParentNumericPath() != null) {
+            parentIdsPath = parentCategory.getParentNumericPath() + parentIdsPath;
+        }
+        criteria.add(Restrictions.like("parentNumericPath", parentIdsPath));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        return (List<CatalogItem>) criteria.list();
+
     }
 
     private List<CatalogItem> getByHibernateCriteria(List<CatalogItemFilter> catalogItemFilters) {
@@ -103,13 +120,13 @@ public class CatalogItemService {
                     case STRING:
                     case INT:
                     case DOUBLE: {
-                        sqlQueryBuilder.append("(av.attributeDef_catalog_item_id = :ad_id");
+                        sqlQueryBuilder.append("(av.attributeDef_id = :ad_id");
                         sqlQueryBuilder.append(parameterIndex);
                         queryParams.put("ad_id" + parameterIndex, catalogItemFilter.getAttributeDef().getId());
                         sqlQueryBuilder.append(" and av.value in (:av_v");
                         sqlQueryBuilder.append(parameterIndex);
                         queryParams.put("av_v" + parameterIndex, catalogItemFilter.getSelectedValues());
-                        sqlQueryBuilder.append(") )");
+                        sqlQueryBuilder.append("))");
                         break;
                     }
 //                    case NUMERIC_RANGE: {
@@ -118,7 +135,7 @@ public class CatalogItemService {
 //                    }
                 }
                 if (iterator.hasNext()) {
-                    sqlQueryBuilder.append(" and ");
+                    sqlQueryBuilder.append(" or ");
                 }
             }
 
@@ -144,6 +161,36 @@ public class CatalogItemService {
             }
         }
         return Collections.emptyList();
+    }
+
+    private Set<Long> getByNamedQuery(List<CatalogItemFilter> catalogItemFilters) {
+
+        if (CollectionUtils.isNotEmpty(catalogItemFilters)) {
+
+            CatalogItemFilter catalogItemFilter;
+            Iterator<CatalogItemFilter> iterator = catalogItemFilters.iterator();
+            Set<Long> catalogItemIds = null;
+
+            while (iterator.hasNext()) {
+                catalogItemFilter = iterator.next();
+
+                Query query = sessionFactory.getCurrentSession().getNamedQuery("getDistinctCatalogItemIdByAttributeValues")
+                        .setParameter("attrId", catalogItemFilter.getAttributeDef().getId())
+                        .setParameterList("attrValues", catalogItemFilter.getSelectedValues());
+
+                List<Long> list = query.list();
+                if (CollectionUtils.isEmpty(list)) {
+                    catalogItemIds = Collections.emptySet();
+                    break;
+                }
+                if (catalogItemIds == null) {
+                    catalogItemIds = new HashSet<>(list);
+                }
+                catalogItemIds.retainAll(list);
+            }
+            return catalogItemIds;
+        }
+        return Collections.emptySet();
     }
 }
 

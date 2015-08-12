@@ -1,0 +1,63 @@
+<ui:composition template="common/commonLayout.xhtml" name="category"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="content">
+
+        <h:form id="catalogItemForm" prependId="false">
+
+            <p:dataList id="catalogItemFilterTable" value="#{catalogItemFilterView.catalogItemFilters}" var="catalogItemFilter" type="definition">
+                <f:facet name="header">
+                    <h:outputLabel value="Catalog Item Filters "/>
+                    <h:panelGroup>
+                        <p:commandButton value="apply" action="#{catalogItemFilterView.initCatalogItems()}"
+                                         update="@([id$=catalogItemTable])"/>
+                        <p:commandButton value="reset" action="#{catalogItemFilterView.initCatalogItemFiltersList()}"
+                                         update="@([id$=catalogItemTable]) @([id$=catalogItemFilterTable])"/>
+                    </h:panelGroup>
+                </f:facet>
+
+
+                <p:panel header="#{catalogItemFilter.attributeDef.name}">
+                    <h:panelGroup columns="2" cellpadding="10">
+
+                        <p:selectManyCheckbox id="grid" value="#{catalogItemFilter.selectedValues}" layout="grid" columns="1">
+                            <f:selectItems value="#{catalogItemFilter.values}" var="filter" itemLabel="#{filter}" itemValue="#{filter}"/>
+                        </p:selectManyCheckbox>
+
+                    </h:panelGroup>
+                </p:panel>
+
+            </p:dataList>
+
+
+            <p:dataTable id="catalogItemTable" var="catalogItem" value="#{catalogItemFilterView.catalogItems}">
+
+                <f:facet name="header">
+                    <h:outputLabel value="Catalog Items "/>
+                </f:facet>
+
+                <p:column headerText="Id" sortBy="#{catalogItem.id}">
+                    <h:outputText value="#{catalogItem.id}"/>
+                </p:column>
+
+                <p:column headerText="Name" sortBy="#{catalogItem.name}">
+                    <h:outputText value="#{catalogItem.name}"/>
+                </p:column>
+
+                <p:column headerText="Parent" sortBy="#{catalogItem.parent.name}">
+                    <h:outputText value="#{catalogItem.parent.name}"/>
+                </p:column>
+
+                <p:column headerText="Updated" sortBy="#{catalogItem.updated}">
+                    <h:outputText value="#{catalogItem.updated}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -12,14 +12,12 @@ import org.springframework.stereotype.Component;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import java.util.List;
 
 @Component
 @ManagedBean(name = "categoryController")
 @ApplicationScoped
 public class CategoryController {
-
-    @Autowired
-    private BaseCRUDHelper baseCRUDHelper;
 
     @Autowired
     private CategoryService categoryService;
@@ -28,8 +26,21 @@ public class CategoryController {
         categoryService.save(category);
     }
 
+    public List<Category> getChildCategories(long parentId) {
+        return categoryService.listChildCategories(parentId);
+    }
+
     public TreeNode buildTree() {
         Tree<Category> categoryTree = categoryService.buildCategoriesTree();
+
+        DefaultTreeNode root = new DefaultTreeNode(categoryTree.getData(), null);
+        categoryTree.accept(new PrimeTreeNodeVisitor(root));
+
+        return root;
+    }
+
+    public TreeNode buildTree(Category parentCategory) {
+        Tree<Category> categoryTree = categoryService.buildCategoriesTree(parentCategory);
 
         DefaultTreeNode root = new DefaultTreeNode(categoryTree.getData(), null);
         categoryTree.accept(new PrimeTreeNodeVisitor(root));

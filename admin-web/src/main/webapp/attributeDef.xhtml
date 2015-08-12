@@ -1,4 +1,4 @@
-<ui:composition template="commonLayout.xhtml" name="category"
+<ui:composition template="common/commonLayout.xhtml" name="category"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
@@ -15,9 +15,9 @@
                     <h:outputLabel value="Attribute Defs"/>
                     <h:panelGroup>
                         <p:commandButton value="add" action="#{attributeDefView.initNewAttributeDefDialog()}"
-                                         oncomplete="newAttributeDlg.show()" update="@([id$=attributeDialog])"/>
+                                         oncomplete="PF('newAttributeDlg').show()" update="@([id$=attributeDialog])"/>
                         <p:commandButton value="edit" action="#{catalogItemView.initEditCatalogItemDialog()}"
-                                         oncomplete="newAttributeDlg.show()" update="@([id$=attributeDialog])"/>
+                                         oncomplete="PF('newAttributeDlg').show()" update="@([id$=attributeDialog])"/>
                     </h:panelGroup>
                 </f:facet>
 
@@ -63,10 +63,10 @@
                     </h:panelGrid>
                     <h:panelGroup layout="block" columns="2" style="text-align: center">
                         <p:commandButton value="Cancel" style="margin: 5px 25px;"
-                                         oncomplete="newAttributeDlg.hide()" immediate="true"/>
+                                         oncomplete="PF('newAttributeDlg').hide()" immediate="true"/>
                         <p:commandButton value="Ok" style="margin: 5px 25px;"
                                          action="#{attributeDefView.addAttributeDef()}"
-                                         oncomplete="newAttributeDlg.hide()" update="@([id$=attributeDefTable])"/>
+                                         oncomplete="PF('newAttributeDlg').hide()" update="@([id$=attributeDefTable])"/>
                     </h:panelGroup>
                 </p:outputPanel>
             </p:dialog>
