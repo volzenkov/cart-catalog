@@ -7,6 +7,7 @@ import com.aqua.web.controller.CatalogItemController;
 import com.aqua.web.controller.CatalogItemFilterController;
 import com.aqua.web.controller.CategoryController;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -14,9 +15,11 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.List;
 public class CatalogItemView implements Serializable {
 
     private TreeNode categoriesTree;
+    private TreeNode selectedNode;
 //    private MenuModel baseCategoriesMenu;
     private List<Category> baseCategories;
     private Category selectedBaseCategory;
@@ -52,6 +56,7 @@ public class CatalogItemView implements Serializable {
         initCategoriesTree();
         initCatalogItems();
         initCatalogItemFiltersList();
+        selectedNode = categoriesTree;
 //        baseCategoriesMenu = new DefaultMenuModel();
 //        for (Category baseCategory : baseCategories) {
 //            DefaultMenuItem defaultMenuItem = new DefaultMenuItem(baseCategory.getName());
@@ -137,5 +142,18 @@ public class CatalogItemView implements Serializable {
 
     public void setCatalogItemFilterController(CatalogItemFilterController catalogItemFilterController) {
         this.catalogItemFilterController = catalogItemFilterController;
+    }
+
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
+
+    public void onNodeSelect(NodeSelectEvent event) {
+//        Event on select catalog from tree
+//        ((Category)event.getTreeNode().getData()).getXXX()
     }
 }

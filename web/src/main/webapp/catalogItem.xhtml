@@ -21,7 +21,9 @@
 
 
                 <p:layoutUnit position="west" resizable="true" maxSize="250">
-                    <p:tree id="categoriesTree" value="#{catalogItemView.categoriesTree}" var="node" dynamic="true">
+                    <p:tree id="categoriesTree" value="#{catalogItemView.categoriesTree}" var="node" dynamic="true"
+                            selectionMode="single" selection="#{catalogItemView.selectedNode}">
+                        <p:ajax event="select" update=":messages" listener="#{catalogItemView.onNodeSelect}" />
                         <p:treeNode>
                             <h:outputText value="#{node.name}"/>
                         </p:treeNode>
@@ -29,14 +31,14 @@
 
                 </p:layoutUnit>
 
-                <p:layoutUnit position="center" resizable="true" mixSize="600">
+                <p:layoutUnit position="center" resizable="true" minSize="600">
                     <p:dataGrid var="catalogItem" value="#{catalogItemView.catalogItems}" columns="2" layout="grid"
                                 rows="12" paginator="true" id="catalogItemTable"
                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                 rowsPerPageTemplate="6,12,16">
 
                         <f:facet name="header">
-                            Cars for Sale
+                            Goods
                         </f:facet>
 
                         <p:panel header="#{catalogItem.name}" style="text-align:center">
