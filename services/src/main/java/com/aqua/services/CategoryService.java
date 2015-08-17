@@ -67,11 +67,19 @@ public class CategoryService {
     private Deque<Category> buildParentsStack(Category category, long headCategoryId) {
         Deque<Category> parentsStack = new ArrayDeque<>();
         Category parent = category;
-        while (parent != null && parent.getId() != headCategoryId) {
+        do {
             parentsStack.push(parent);
             parent = parent.getParent();
-        }
+        } while (parent != null && parent.getId() != headCategoryId);
         return parentsStack;
+    }
+
+    private Category retrieveRootParent(Category category, long headCategoryId) {
+        Category parent = category;
+        while (parent.getId() != headCategoryId) {
+            parent = parent.getParent();
+        }
+        return parent;
     }
 
     public Tree<Category> buildCategoriesTree(Category parentCategory) {
@@ -87,7 +95,7 @@ public class CategoryService {
                 List<Category> categories = baseCRUDHelper.executeNamedQueryWithResult(
                         "getCategoriesByParentId", new String[]{idsPathCriteria});
 
-                Tree<Category> rootNode = new Tree<>(buildParentsStack(categories.get(0), parentCategory.getId()).getFirst());
+                Tree<Category> rootNode = new Tree<>(retrieveRootParent(categories.get(0), parentCategory.getId()));
                 Tree<Category> current = rootNode;
 
                 for (Category category : categories) {
