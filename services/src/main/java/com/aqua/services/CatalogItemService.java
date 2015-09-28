@@ -45,7 +45,7 @@ public class CatalogItemService {
         if (catalogItemFilters != null) {
             List<CatalogItemFilter> filters = new LinkedList<>();
             for (CatalogItemFilter catalogItemFilter : catalogItemFilters) {
-                if (catalogItemFilter.getSelectedValues().length > 0 &&
+                if (catalogItemFilter.getSelectedValues() != null && catalogItemFilter.getSelectedValues().length > 0 &&
                         catalogItemFilter.getSelectedValues().length < catalogItemFilter.getValues().length) {
                     filters.add(catalogItemFilter);
                 }

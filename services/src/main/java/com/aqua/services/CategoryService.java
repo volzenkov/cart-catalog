@@ -1,6 +1,7 @@
 package com.aqua.services;
 
 import com.aqua.dao.exceptions.FinderException;
+import com.aqua.domain.AttributeDef;
 import com.aqua.domain.Category;
 import com.aqua.services.tree.PrintIndentedVisitor;
 import com.aqua.services.tree.Tree;
@@ -8,10 +9,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CategoryService {
@@ -115,5 +115,23 @@ public class CategoryService {
             throw new RuntimeException(e);
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<String> getConsumersByCategory(Category category) {
+        String parentNumericPath = category.getId() + ".%";
+        if (category.getParentNumericPath() != null) {
+            parentNumericPath = category.getParentNumericPath() + parentNumericPath;
+        }
+
+        AttributeDef consumerAttributeDef = baseCRUDHelper.getById(AttributeDef.class, 1L);
+
+        if (consumerAttributeDef != null) {
+            return baseCRUDHelper.executeNamedQueryWithResult("getDistinctAttributeValuesByAttributeDefAndCategory",
+                    new Object[]{consumerAttributeDef.getId(), parentNumericPath});
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
 
 }

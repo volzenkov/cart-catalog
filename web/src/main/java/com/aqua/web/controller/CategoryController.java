@@ -47,6 +47,9 @@ public class CategoryController {
 
         return root;
     }
+    public List<String> getConsumersByCategory(Category category) {
+        return categoryService.getConsumersByCategory(category);
+    }
 
     class PrimeTreeNodeVisitor implements Visitor<Category> {
 

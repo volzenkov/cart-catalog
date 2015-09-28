@@ -3,10 +3,14 @@ package com.aqua.domain;
 import javax.persistence.*;
 
 @NamedQueries({
-        @NamedQuery(name = "getDistinctAttributeValuesByAttributeDef", query =
-                "select distinct av.value from AttributeValue av where av.attributeDef.id = ?"),
-        @NamedQuery(name = "getDistinctCatalogItemIdByAttributeValues", query =
-                "select distinct av.catalogItem.id from AttributeValue av where av.attributeDef.id = :attrId and av.value in (:attrValues)")
+        @NamedQuery(name = "getDistinctAttributeValuesByAttributeDef",
+                query = "select distinct av.value from AttributeValue av where av.attributeDef.id = ?"),
+        @NamedQuery(name = "getDistinctAttributeValuesByAttributeDefAndCategory",
+                query = "select distinct av.value from AttributeValue av where av.attributeDef.id = ? and av.catalogItem.parentNumericPath like ?"),
+        @NamedQuery(name = "getDistinctCatalogItemIdByAttributeValues",
+                query = "select distinct av.catalogItem.id from AttributeValue av where av.attributeDef.id = :attrId and av.value in (:attrValues)"),
+        @NamedQuery(name = "getDistinctAttributeDefByParentPath",
+                query = "select distinct av.attributeDef from AttributeValue av where av.catalogItem.parentNumericPath like ?")
 })
 
 @Entity

@@ -1,5 +1,6 @@
 package com.aqua.web.controller;
 
+import com.aqua.domain.Category;
 import com.aqua.services.CatalogItemFilter;
 import com.aqua.services.CatalogItemFilterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,10 @@ public class CatalogItemFilterController {
 
     public List<CatalogItemFilter> listCatalogItemFilters() {
         return catalogItemFilterService.getCatalogItemFiltersRegistry();
+    }
+
+    public List<CatalogItemFilter> listCatalogItemFilters(Category category) {
+        return catalogItemFilterService.getFiltersByCategory(category);
     }
 
     public void setCatalogItemFilterService(CatalogItemFilterService catalogItemFilterService) {

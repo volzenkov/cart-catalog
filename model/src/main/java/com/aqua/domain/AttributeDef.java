@@ -2,6 +2,11 @@ package com.aqua.domain;
 
 import javax.persistence.*;
 
+@NamedQueries({
+        @NamedQuery(name = "getAttributeDefsById",
+                query = "select distinct ad from AttributeDef ad where ad.id in(?)")
+})
+
 @Entity
 @Table(name = "attribute_def")
 @Inheritance(strategy = InheritanceType.JOINED)

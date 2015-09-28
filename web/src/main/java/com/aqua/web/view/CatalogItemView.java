@@ -7,7 +7,9 @@ import com.aqua.web.controller.CatalogItemController;
 import com.aqua.web.controller.CatalogItemFilterController;
 import com.aqua.web.controller.CategoryController;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -23,6 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by kama3 on 29.06.2015.
@@ -66,7 +69,8 @@ public class CatalogItemView implements Serializable {
     }
 
     public void initCatalogItemFiltersList() {
-        catalogItemFilters = catalogItemFilterController.listCatalogItemFilters();
+        //catalogItemFilters = catalogItemFilterController.listCatalogItemFilters();
+        catalogItemFilters = catalogItemFilterController.listCatalogItemFilters(selectedBaseCategory);
     }
 
     public void initCatalogItems() {
@@ -153,7 +157,25 @@ public class CatalogItemView implements Serializable {
     }
 
     public void onNodeSelect(NodeSelectEvent event) {
-//        Event on select catalog from tree
-//        ((Category)event.getTreeNode().getData()).getXXX()
+        handleCategoryTreeNodeEvent(event.getTreeNode());
+    }
+
+    public void onNodeExpand(NodeExpandEvent event) {
+        handleCategoryTreeNodeEvent(event.getTreeNode());
+    }
+
+    private void handleCategoryTreeNodeEvent(TreeNode treeNode) {
+        Object data = treeNode.getData();
+        if (data instanceof Category) {
+            Category category = (Category) data;
+            catalogItemFilters = catalogItemFilterController.listCatalogItemFilters(category);
+            catalogItems = catalogItemController.listCatalogItemByFilters(category, catalogItemFilters);
+            if (treeNode.isLeaf()) {
+                List<String> consumersByCategory = categoryController.getConsumersByCategory(category);
+                for (String s : consumersByCategory) {
+                    treeNode.getChildren().add(new DefaultTreeNode(s));
+                }
+            }
+        }
     }
 }

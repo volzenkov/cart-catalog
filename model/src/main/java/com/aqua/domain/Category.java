@@ -1,6 +1,8 @@
 package com.aqua.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @NamedQueries({
@@ -24,4 +26,20 @@ public class Category extends CatalogNode {
         super(name, parentCategory);
     }
 
+    @Column
+    @ElementCollection(targetClass=Long.class)
+    private List<Long> attributeDefFilters = new ArrayList<>();
+
+    public List<Long> getAttributeDefFilters() {
+        return attributeDefFilters;
+    }
+
+    public void setAttributeDefFilters(List<Long> attributeDefFilters) {
+        this.attributeDefFilters = attributeDefFilters;
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

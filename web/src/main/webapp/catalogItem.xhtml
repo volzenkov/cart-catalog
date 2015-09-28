@@ -23,9 +23,12 @@
                 <p:layoutUnit position="west" resizable="true" maxSize="250">
                     <p:tree id="categoriesTree" value="#{catalogItemView.categoriesTree}" var="node" dynamic="true"
                             selectionMode="single" selection="#{catalogItemView.selectedNode}">
-                        <p:ajax event="select" update=":messages" listener="#{catalogItemView.onNodeSelect}" />
+                        <p:ajax event="select" listener="#{catalogItemView.onNodeSelect}"
+                                update="@([id$=categoriesTree]) @([id$=catalogItemTable]) @([id$=catalogItemFilterTable])"/>
+                        <p:ajax event="expand" listener="#{catalogItemView.onNodeExpand}"
+                                update="@([id$=categoriesTree]) @([id$=catalogItemTable]) @([id$=catalogItemFilterTable])"/>
                         <p:treeNode>
-                            <h:outputText value="#{node.name}"/>
+                            <h:outputText value="#{node}"/>
                         </p:treeNode>
                     </p:tree>
 
